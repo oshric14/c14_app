@@ -1,0 +1,1981 @@
+/* Reset and base styles */
+
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "SimonaPro";
+    src: url("/static/fonts/SimonaPro-Regular.woff2") format("woff2"),
+        url("/static/fonts/SimonaPro-Regular.woff") format("woff"),
+        url("/public/static/staticfonts/SimonaPro-Regular.ttf") format("ttf");
+    font-weight: 600;
+    font-style: light;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: "SimonaPro";
+}
+
+/* Player container */
+
+.rgpl-container {
+    background: #000 !important;
+}
+
+
+/* ==============================================
+     CENTER OVERLAY BUTTONS
+     ============================================== */
+
+/* class="rgpl-overlay-buttons rgpl-overlay-buttons" */
+
+.rgpl-overlay-buttons {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10% !important;
+    z-index: 1000 !important;
+    background: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+}
+
+/* Skip backward button */
+
+.rgpl-btn-jump-backward {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: none !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    position: relative !important;
+}
+
+.rgpl-btn-jump-backward:hover {
+    transform: scale(1.05) !important;
+    color: white !important;
+}
+
+/* Backward button icon */
+
+.rgpl-btn-jump-backward:before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 44px !important;
+    height: 44px !important;
+    background-image: url("/static/icons/RedgePlayer/10backward.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+}
+
+/* Hide the span text */
+
+.rgpl-btn-jump-backward span {
+    display: none !important;
+}
+
+/* Main play/pause button */
+
+.rgpl-btn-play-pause {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 80px !important;
+    height: 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    position: relative !important;
+}
+
+.rgpl-btn-play-pause:hover {
+    cursor: pointer !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Play/Pause button inside the main button */
+
+/* Play button icon */
+
+.rgpl-btn-play-pause .rgpl-btn-play:before {
+    content: "" !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url("/static/icons/RedgePlayer/Play.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 30px 30px !important;
+}
+
+/* Pause button icon */
+
+.rgpl-btn-play-pause .rgpl-btn-pause:before {
+    content: "" !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url("/static/icons/RedgePlayer/Pause.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 30px 30px !important;
+}
+
+/* Skip forward button */
+
+.rgpl-btn-jump-forward {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: none !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    position: relative !important;
+}
+
+.rgpl-btn-jump-forward:hover {
+    transform: scale(1.05) !important;
+    color: white !important;
+}
+
+/* Forward button icon */
+
+.rgpl-btn-jump-forward:before {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 44px !important;
+    height: 44px !important;
+    background-image: url("/static/icons/RedgePlayer/10forward.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: contain !important;
+}
+
+/* Hide the span text */
+
+.rgpl-btn-jump-forward span {
+    display: none !important;
+}
+
+/* ==============================================
+     BOTTOM CONTROL BAR
+     ============================================== */
+
+.rgpl-controls-bar {
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    min-height: 80px !important;
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.9) 0%,
+            rgba(0, 0, 0, 0.6) 70%,
+            transparent 100%) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-end !important;
+    z-index: 1000 !important;
+    gap: 8px !important;
+    padding: 12px 16px 16px 16px !important;
+    box-sizing: border-box !important;
+}
+
+.rgpl-controls-bar.hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.rgpl-controls-bar.progress-dragging {
+    opacity: 1 !important;
+    pointer-events: all !important;
+    transition: none !important;
+}
+
+.rgpl-controls-bar.visible {
+    opacity: 1 !important;
+    pointer-events: all !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.rgpl-controls-bar-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Controls group - perfect alignment */
+
+.rgpl-controls__group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    padding: 0px !important;
+}
+
+/* Progress bar row - full width */
+
+.rgpl-progress-control {
+    display: flex !important;
+    width: 100% !important;
+    height: 4px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 2px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    order: 1 !important;
+}
+
+/* Ensure the control group becomes the controls row */
+
+.rgpl-control-group-controls {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    gap: 12px !important;
+    order: 2 !important;
+}
+
+/* First row: make the main progress bar take full width */
+
+.rgpl-control-group-controls>.rgpl-progress-control {
+    order: 1 !important;
+    flex: 0 0 100% !important;
+    margin: 0 !important;
+}
+
+/* Second row order: time (left) → volume (center grows) → fullscreen → settings */
+
+.rgpl-control-group-controls .rgpl-controls-time {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+}
+
+.rgpl-control-group-controls .rgpl-volume-control {
+    order: 3 !important;
+    flex: 0 0 auto !important;
+    justify-content: center !important;
+}
+
+.rgpl-btn-settings,
+.rgpl-btn-subtitle {
+    display: none !important;
+}
+
+.rgpl-control-group-controls .rgpl-btn-pip {
+    order: 4 !important;
+    flex: 0 0 auto !important;
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.rgpl-control-group-controls .speed-btn {
+    cursor: pointer;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 auto !important;
+    justify-content: center !important;
+    order: 6 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: white !important;
+    line-height: 1 !important;
+}
+
+.rgpl-control-group-controls .speed-btn.is-hidden-live {
+    display: none !important;
+}
+
+/* Hide play/pause button in the bottom controls row (kept in overlay) */
+
+.rgpl-control-group-controls .rgpl-btn-play,
+.rgpl-control-group-controls .rgpl-btn-pause {
+    display: none !important;
+}
+
+.rgpl-btn-live {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    height: 36px !important;
+    padding: 0 16px !important;
+    border-radius: 9999px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    text-transform: none !important;
+    backdrop-filter: blur(8px) !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    transition: all 0.25s ease !important;
+    margin-left: auto !important;
+}
+
+.rgpl-btn-live button {
+    all: unset !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    height: 100% !important;
+    padding: 0 !important;
+    color: inherit !important;
+    font: inherit !important;
+    cursor: pointer !important;
+}
+
+.rgpl-btn-live:before {
+    content: "" !important;
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+    background: #ff002b !important;
+    box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7) !important;
+    transition: transform 0.25s ease !important;
+}
+
+.rgpl-btn-live:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+.rgpl-btn-live:active {
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+.rgpl-btn-live:focus-within {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.35) !important;
+}
+
+/* Not-live state (timeshift is off) */
+
+.rgpl-btn-live.timeshift-live-mode-off {
+    background: linear-gradient(135deg, #ff3b3b, white) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    animation: liveGlow 2s ease-in-out infinite !important;
+}
+
+.rgpl-btn-live.timeshift-live-mode-off:before {
+    background: #ffffff !important;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7),
+        0 0 12px rgba(255, 255, 255, 0.55) !important;
+}
+
+@keyframes liveGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.45),
+            0 0 0 0 rgba(255, 255, 255, 0.597) !important;
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px rgba(255, 59, 59, 0), 0 0 0 6px rgba(255, 138, 59, 0) !important;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 59, 0), 0 0 0 0 rgba(255, 138, 59, 0) !important;
+    }
+}
+
+/* Overrides per latest requirements */
+
+.rgpl-btn-live button {
+    font-size: 0 !important;
+    /* hide original text, we will render via ::after */
+    white-space: nowrap !important;
+}
+
+.rgpl-btn-live button::after {
+    content: "LIVE" !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.4px !important;
+    color: #ffffff !important;
+    margin-right: 5px;
+    font-family: "SimonaPro";
+}
+
+/* Live state: red/white with gentle pulse */
+
+.rgpl-btn-live:not(.timeshift-live-mode-off) {
+    background: linear-gradient(135deg,
+            #ef4444,
+            rgba(255, 0, 0, 0.436)) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.rgpl-btn-live:not(.timeshift-live-mode-off):before {
+    background: #ffeded !important;
+    /* white-ish dot */
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8) !important;
+    animation: liveDotPulse 1.75s ease-in-out infinite !important;
+}
+
+@keyframes liveDotPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55) !important;
+        opacity: 1 !important;
+    }
+
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0) !important;
+        opacity: 0.9 !important;
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0) !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Not live (timeshift mode off class present): gray pill, label "Back to live" */
+
+.rgpl-btn-live.timeshift-live-mode-off {
+    background: rgba(255, 255, 255, 0.08) !important;
+    /* gray/neutral */
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    color: #e5e7eb !important;
+    /* gray-200 */
+    animation: none !important;
+}
+
+.rgpl-btn-live.timeshift-live-mode-off:before {
+    background: #9ca3af !important;
+    /* gray-400 dot */
+    box-shadow: none !important;
+}
+
+.rgpl-btn-live.timeshift-live-mode-off:hover {
+    background: rgba(255, 255, 255, 0.14) !important;
+    border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+.rgpl-btn-live.timeshift-live-mode-off button::after {
+    content: "LIVE" !important;
+}
+
+.rgpl-control-group-controls .rgpl-btn-live {
+    order: 4 !important;
+    margin-left: auto !important;
+    /* single spacer pushes the right cluster */
+    flex: 0 0 auto !important;
+}
+
+.rgpl-control-group-controls .rgpl-btn-pip {
+    order: 5 !important;
+    margin-left: 0 !important;
+    /* don't create another spacer */
+}
+
+.rgpl-control-group-controls .rgpl-btn-fullscreen {
+    order: 7 !important;
+}
+
+.rgpl-control-group-controls:not(:has(.rgpl-btn-live)) .rgpl-btn-pip {
+    margin-left: auto !important;
+}
+
+/* Mobile app: PIP disabled — speed button takes the right-cluster spacer role */
+html.redge-no-pip .rgpl-control-group-controls:not(:has(.rgpl-btn-live)) .speed-btn:not(.is-hidden-live) {
+    margin-left: auto !important;
+}
+
+html.redge-no-pip .rgpl-control-group-controls:not(:has(.rgpl-btn-live)):has(.speed-btn.is-hidden-live) .rgpl-btn-fullscreen {
+    margin-left: auto !important;
+}
+
+/* Volume control container - middle of controls row */
+
+.rgpl-volume-control {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    height: 44px !important;
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    justify-content: center !important;
+}
+
+/* Volume button */
+
+.rgpl-btn-volume,
+.rgpl-btn-volume-0,
+.rgpl-btn-volume-1,
+.rgpl-btn-volume-2,
+.rgpl-btn-volume-3 {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rgpl-btn-volume:hover,
+.rgpl-btn-volume-0:hover,
+.rgpl-btn-volume-1:hover,
+.rgpl-btn-volume-2:hover,
+.rgpl-btn-volume-3:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Volume progress control (slider) */
+
+.rgpl-volume-control .rgpl-progress-control {
+    width: 0 !important;
+    height: 6px !important;
+    background: rgba(251, 0, 0, 0.485) !important;
+    border-radius: 2px !important;
+    margin: 0 !important;
+    display: flex !important;
+    cursor: pointer !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    /* transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease !important; */
+}
+
+/* Show volume slider on hover */
+.rgpl-volume-control:hover .rgpl-progress-control {
+    width: 80px !important;
+    opacity: 1 !important;
+}
+
+.rgpl-volume-control .rgpl-progress-control-inner {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.rgpl-volume-control .rgpl-progress-bar {
+    height: 100% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 2px !important;
+    overflow: hidden !important;
+}
+
+.rgpl-volume-control .rgpl-progress-video {
+    height: 100% !important;
+    background: linear-gradient(90deg, #ec0a0a, #ec0a0a) !important;
+    border-radius: 2px !important;
+    transition: none !important;
+}
+
+.rgpl-volume-control .rgpl-progress-control-drag {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: white !important;
+    border: 2px solid #ec0a0a !important;
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    /* transition: all 0.2s ease !important; */
+}
+
+.rgpl-volume-control .rgpl-progress-control:hover .rgpl-progress-control-drag {
+    transform: translate(-50%, -50%) scale(1.2) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Fullscreen button - rightmost in controls row */
+
+.rgpl-btn-fullscreen,
+.rgpl-btn-pip {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.rgpl-btn-pip {
+    order: 4 !important;
+    margin-left: auto !important;
+}
+
+.rgpl-btn-fullscreen {
+    order: 7 !important;
+}
+
+.rgpl-btn-fullscreen:hover,
+.speed-btn:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Time display - left side of controls row */
+
+.rgpl-controls-time {
+    display: flex !important;
+    align-items: center !important;
+    color: white !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    order: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.rgpl-controls-separator {
+    display: none !important;
+}
+
+/* Remove duplicate progress bar styling - using the one above */
+
+.rgpl-progress-control-inner {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 2px !important;
+    overflow: hidden !important;
+}
+
+.rgpl-progress-bar {
+    height: 100% !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 2px !important;
+    overflow: hidden !important;
+}
+
+.rgpl-progress-video {
+    height: 100% !important;
+    background: linear-gradient(90deg, #ed2a2a, #ed2a2a) !important;
+    border-radius: 2px !important;
+    transition: none !important;
+}
+
+.rgpl-progress-control-drag {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: white !important;
+    border: 2px solid #ed2a2a !important;
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    transition: box-shadow 0.2s ease !important;
+}
+
+.rgpl-progress-control:hover .rgpl-progress-control-drag {
+    transform: translate(-50%, -50%) scale(1.2) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Make sure play/pause buttons in overlay are visible */
+
+.rgpl-btn-play-pause .rgpl-btn-play,
+.rgpl-btn-play-pause .rgpl-btn-pause {
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Only show the control bar buttons we want */
+
+.rgpl-controls-bar .rgpl-btn-play,
+.rgpl-controls-bar .rgpl-btn-pause {
+    display: none !important;
+}
+
+.redge-player-container {
+    position: relative !important;
+    min-height: 100vh !important;
+}
+
+.shidurim-list-container {
+    direction: rtl;
+    cursor: pointer;
+    position: absolute;
+    top: 45%;
+    left: -280px;
+    transform: translateY(-50%);
+    z-index: 1500;
+    pointer-events: auto;
+}
+
+.shidurim-list-container.open {
+    left: 0;
+    transition: 0.8s;
+}
+
+.shidurim-list-container.open .shidurim-trigger {
+    background-color: #ec2a2a;
+    transition: all 2s ease;
+}
+
+.shidurim-list-container.close {
+    transition: 0.5s;
+}
+
+.shidurim-trigger {
+    position: absolute;
+    right: -40px;
+    width: 50px;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 12px 10px;
+    min-height: 200px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid #ec2a2a;
+    border-radius: 0 10px 10px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: none;
+}
+
+.shidurim-trigger h1 {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.shidurim-trigger:hover {
+    background: rgba(0, 0, 0, 0.75);
+    border-color: #ff3b3b;
+    transform: translateX(2px);
+}
+
+/* Collapsed state - small arrow only */
+.shidurim-trigger.collapsed {
+    min-height: auto !important;
+    padding: 10px 8px !important;
+    width: 40px !important;
+}
+
+.shidurim-trigger.collapsed h1 {
+    display: none !important;
+}
+
+.shidurim-trigger.collapsed .shidurim-arrow {
+    transform: none !important;
+}
+
+/* Hover expand for collapsed state */
+.shidurim-trigger.collapsed.hover-expand {
+    min-height: 200px !important;
+    padding: 12px 10px !important;
+    width: 50px !important;
+}
+
+.shidurim-trigger.collapsed.hover-expand h1 {
+    display: block !important;
+}
+
+.shidurim-drawer {
+    position: relative;
+    width: 280px;
+    min-height: 210px;
+    height: auto;
+    max-height: calc(100vh - 140px);
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px 0 0 10px;
+    border-right: none;
+    box-shadow: -6px 0 18px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+}
+
+.shidurim-trigger h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    font-weight: 700;
+    transform: rotate(180deg);
+    white-space: nowrap;
+}
+
+.shidurim-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.shidurim-drawer-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.shidurim-drawer-close {
+    background: unset;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.shidurim-drawer-close:hover {
+    transform: scale(1.1);
+}
+
+.shidurim-drawer-content {
+    padding: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+}
+
+.shidurim-drawer-content::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+}
+
+.shidurim-drawer-content:active {
+    cursor: grabbing;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.shidurim-list {
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.shidurim-item {
+    justify-content: space-between;
+    gap: 15px;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.shidurim-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.shidurim-item.active {
+    border-left: 4px solid #ec2a2a;
+}
+
+.shidurim-time {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    min-width: 60px;
+}
+
+.shidurim-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.shidurim-item.active .shidurim-time {
+    color: #ec2a2a;
+}
+
+.shidurim-item.active .shidurim-title {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.live-indicator {
+    background: #ec2a2a;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    width: fit-content;
+}
+
+.shidurim-arrow img {
+    height: 15px;
+    width: 15px;
+    transition: transform 0.3s ease;
+}
+
+.shidurim-list-container.open .shidurim-arrow img {
+    transform: rotate(180deg);
+}
+
+.shidurim-list-container {
+    transition: opacity 0.3s ease;
+}
+
+/* Removed: shidurim-list-container now stays visible regardless of control bar state */
+
+/* Hide shidurim and overlay buttons when ad is playing (vpaid container is visible) */
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .shidurim-list-container,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .shidurim-list-container {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-overlay-buttons,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-overlay-buttons {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+/* During ad: reposition controls bar to left side of player */
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-controls-bar,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-controls-bar {
+    /* Change from bottom to left side */
+    position: fixed !important;
+    left: 10px !important;
+    /* top: 50% !important; */
+    bottom: 0% !important;
+    right: auto !important;
+    transform: translateY(-50%) !important;
+    width: auto !important;
+    min-height: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    z-index: 2000 !important;
+}
+
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-control-group-controls {
+    gap: 8px !important;
+}
+
+/* During ad: hide all controls except volume and fullscreen */
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-progress-control,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-progress-control,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-controls-time,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-controls-time,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-btn-pip,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-btn-pip,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-btn-live,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-btn-live,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .speed-btn,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .speed-btn,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-btn-subtitle,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-btn-subtitle,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-btn-settings,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-btn-settings {
+    display: none !important;
+}
+
+/* During ad: keep volume and fullscreen visible */
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-volume-control,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-volume-control,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display: none"])) .rgpl-btn-fullscreen,
+.redge-player-container:has(.rgpl-vpaid-container:not([style*="display"])) .rgpl-btn-fullscreen {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.rgpl-controls__group .rgpl-control-group-controls:has(.rgpl-btn-pip) .speed-btn,
+html.redge-no-pip .rgpl-controls__group .rgpl-control-group-controls .speed-btn {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.rgpl-settings {
+    position: fixed !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    pointer-events: none !important;
+    z-index: 2147483646 !important;
+}
+
+.rgpl-settings::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    opacity: 0 !important;
+    transition: opacity 0.22s ease !important;
+}
+
+.rgpl-settings.active {
+    pointer-events: auto !important;
+}
+
+.rgpl-settings.active::before {
+    opacity: 1 !important;
+}
+
+/* Hide lists by default; show only when active */
+
+.rgpl-settings .rgpl-settings-main-list {
+    display: none !important;
+}
+
+/* Prepare animation state */
+
+.rgpl-settings .rgpl-settings-main-list--visible {
+    transform: translateY(8px) scale(0.97) !important;
+    opacity: 0 !important;
+    transition: transform 0.22s ease, opacity 0.22s ease !important;
+}
+
+.rgpl-settings.active .rgpl-settings-main-list--visible {
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    width: min(92vw, 420px) !important;
+    max-height: 80vh !important;
+    overflow: hidden auto !important;
+    background: rgba(17, 17, 17, 0.98) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(6px) !important;
+    color: #ffffff !important;
+    transform: translateY(0) scale(1) !important;
+    opacity: 1 !important;
+}
+
+.rgpl-settings .rgpl-settings-header {
+    position: sticky !important;
+    top: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px 14px !important;
+    background: rgba(17, 17, 17, 0.98) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    z-index: 1 !important;
+}
+
+.rgpl-settings .rgpl-settings-header__text {
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}
+
+.rgpl-settings .rgpl-settings-header-button {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    width: 32px !important;
+    height: 28px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+}
+
+.rgpl-settings .rgpl-settings-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    gap: 10px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    font-size: 14px !important;
+}
+
+.rgpl-settings .rgpl-settings-item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.rgpl-settings .rgpl-settings-item.selected {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==============================================
+     RESPONSIVE DESIGN
+     ============================================== */
+
+/* Large screens (1200px and up) */
+
+@media (min-width: 1200px) {
+    .rgpl-controls-bar {
+        padding: 16px 24px 20px 24px !important;
+        min-height: 85px !important;
+    }
+}
+
+/* Medium screens (768px to 1199px) */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .rgpl-controls-bar {
+        padding: 14px 20px 18px 20px !important;
+        min-height: 25vh !important;
+    }
+}
+
+/* Small screens (480px to 767px) */
+
+@media (min-width: 480px) and (max-width: 767px) {
+    .rgpl-controls-bar {
+        padding: 12px 16px 16px 16px !important;
+        min-height: 20vh !important;
+    }
+
+    /* Live button - tablet/small screens */
+    .rgpl-btn-live {
+        height: 34px !important;
+        padding: 0 12px !important;
+        gap: 6px !important;
+    }
+
+    .rgpl-btn-live button::after {
+        font-size: 8px !important;
+    }
+
+    .rgpl-btn-live:before {
+        width: 6px !important;
+        height: 6px !important;
+    }
+
+    /* Unmute overlay - tablet */
+    .rgpl-unmute-overlay span {
+        padding: 16px 32px !important;
+        font-size: 16px !important;
+        gap: 10px !important;
+        border-radius: 12px !important;
+    }
+
+    .rgpl-unmute-overlay span::before {
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
+/* Extra small screens (under 480pfcx) */
+
+@media (max-width: 479px) {
+    .rgpl-controls-bar {
+        padding: 10px 12px 14px 12px !important;
+        min-height: 25vh !important;
+    }
+
+    /* Adjust control bar position for mobile */
+    .rgpl-overlay-buttons {
+        /* gap: 25px !important; */
+        gap: 5% !important;
+    }
+
+    .rgpl-btn-jump-backward,
+    .rgpl-btn-jump-forward {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 12px !important;
+    }
+
+    .rgpl-btn-volume,
+    .rgpl-btn-volume-0,
+    .rgpl-btn-volume-1,
+    .rgpl-btn-volume-2,
+    .rgpl-btn-volume-3,
+    .rgpl-btn-fullscreen,
+    .rgpl-btn-settings,
+    .rgpl-btn-pip {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .rgpl-control-group-controls .speed-btn {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Volume control adjustments for mobile */
+    .rgpl-volume-control {
+        gap: 8px !important;
+        height: auto !important;
+    }
+
+    /* On mobile, show volume slider by default (no hover) */
+    .rgpl-volume-control .rgpl-progress-control {
+        width: 80px !important;
+        max-width: 80px !important;
+        opacity: 1 !important;
+    }
+
+    .player-close-btn {
+        right: 15px !important;
+    }
+
+    .channel-info {
+        left: 15px !important;
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+    }
+
+    .rgpl-btn-fullscreen,
+    .rgpl-btn-volume,
+    .rgpl-btn-settings,
+    .rgpl-btn-pip {
+        font-size: 18px !important;
+    }
+
+    .rgpl-btn-play-pause {
+        width: 60px !important;
+        height: 60px !important;
+        margin: 0 !important;
+    }
+
+    .rgpl-btn-play-pause:hover {
+        background: unset !important;
+        border-color: unset !important;
+        transform: scale(1.05) !important;
+    }
+
+    .rgpl-btn-play {
+        margin: unset !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .rgpl-btn-jump-forward:before {
+        width: 25px !important;
+        height: 25px !important;
+    }
+
+    .rgpl-btn-jump-backward:before {
+        width: 25px !important;
+        height: 25px !important;
+    }
+
+    .rgpl-btn-live {
+        height: 26px !important;
+        gap: 0px !important;
+        padding: 0px 8px !important;
+    }
+
+    .rgpl-btn-live button {
+        height: 100% !important;
+    }
+
+    .rgpl-settings.active .rgpl-settings-main-list--visible {
+        width: 92vw !important;
+        max-height: 78vh !important;
+        border-radius: 10px !important;
+    }
+
+    .rgpl-settings .rgpl-settings-header {
+        padding: 10px 12px !important;
+    }
+
+    .rgpl-settings .rgpl-settings-header__text {
+        font-size: 15px !important;
+    }
+
+    .rgpl-settings .rgpl-settings-item {
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+    }
+
+    .shidurim-list-container h1 {
+        font-size: 14px !important;
+        font-weight: bold;
+    }
+
+    .shidurim-trigger {
+        min-height: 110px !important;
+        padding: 10px !important;
+        top: 20%;
+        right: -35px;
+    }
+
+    /* Collapsed state on mobile */
+    .shidurim-trigger.collapsed {
+        min-height: auto !important;
+        padding: 8px 6px !important;
+        width: 30px !important;
+        right: -30px !important;
+    }
+
+    .shidurim-trigger.collapsed.hover-expand {
+        min-height: 110px !important;
+        padding: 10px !important;
+        width: 35px !important;
+        right: -35px !important;
+    }
+
+    .shidurim-trigger div {
+        width: 100%;
+    }
+
+    .shidurim-arrow img {
+        width: 10px !important;
+        height: 10px !important;
+    }
+
+    .shidurim-list-container h1 {
+        font-size: 14px !important;
+        font-weight: bolder;
+    }
+
+    /* Mobile drawer styles */
+    .shidurim-drawer {
+        width: 260px !important;
+        max-height: calc(100vh - 120px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .shidurim-list-container {
+        left: -260px !important;
+        top: 42% !important;
+    }
+
+    .shidurim-list-container.open {
+        left: 0 !important;
+    }
+
+    .shidurim-list-container.close {
+        left: -260px !important;
+    }
+
+    .shidurim-drawer-header {
+        padding: 12px !important;
+    }
+
+    .shidurim-drawer-header h2 {
+        font-size: 18px !important;
+    }
+
+    .shidurim-item {
+        padding: 10px 12px !important;
+    }
+
+    .shidurim-time {
+        font-size: 13px !important;
+        /* min-width: 46px !important; */
+    }
+
+    .shidurim-title {
+        font-size: 12px !important;
+    }
+
+    .shidurim-drawer-content {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+    }
+
+    #player .rgpl-spinner,
+    .rgpl-spinner {
+        width: 25px !important;
+        height: 25px !important;
+    }
+
+    .rgpl-controls-time-duration,
+    .rgpl-controls-time-current,
+    .rgpl-controls-time-separator {
+        font-size: 10px;
+    }
+
+    /* Unmute overlay - mobile */
+    .rgpl-unmute-overlay span {
+        padding: 14px 28px !important;
+        font-size: 14px !important;
+        gap: 8px !important;
+        border-radius: 10px !important;
+    }
+
+    .rgpl-unmute-overlay span::before {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
+
+/* ==============================================
+     SEEK FEEDBACK (double-tap gesture)
+     ============================================== */
+
+.seek-btn-pulse {
+    animation: seekBtnPulse 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    transition: none !important;
+}
+
+@keyframes seekBtnPulse {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+    }
+
+    40% {
+        transform: scale(1.6);
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.95));
+    }
+
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+    }
+}
+
+/* ==============================================
+     ANIMATIONS AND TRANSITIONS
+     ============================================== */
+
+.rgpl {
+    animation: playerFadeIn 0.5s ease-out !important;
+}
+
+@keyframes playerFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#player .rgpl-spinner,
+.rgpl-spinner {
+    /* Neutralize default spinner visuals */
+    --rmp-spinner-color: transparent !important;
+    --rmp-spinner-bg-color: transparent !important;
+    --rmp-spinner-size: 84px !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent url("/static/icons/RedgePlayer/redge-loader.svg") no-repeat center / contain !important;
+    position: absolute !important;
+    top: 20% !important;
+    left: 50% !important;
+    width: 35px !important;
+    height: 35px !important;
+    margin: 0 !important;
+    /* Allow keyframes to control transform for bouncing */
+    animation: c14-breath 2s ease-in-out infinite !important;
+    animation-fill-mode: both !important;
+    animation-play-state: running !important;
+    transform-origin: center center !important;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35)) !important;
+    will-change: transform !important;
+    z-index: 1000 !important;
+}
+
+#player .rgpl-spinner:before,
+.rgpl-spinner:before {
+    content: none !important;
+}
+
+@keyframes c14-breath {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.25);
+        /* grow 25% */
+        opacity: 1;
+    }
+}
+
+.rgpl-btn-settings,
+.player-close-btn,
+.rgpl-btn-jump-backward,
+.rgpl-btn-play-pause,
+.rgpl-btn-jump-forward,
+.rgpl-btn-volume,
+.rgpl-btn-volume-0,
+.rgpl-btn-volume-1,
+.rgpl-btn-volume-2,
+.rgpl-btn-volume-3,
+.rgpl-btn-fullscreen,
+.rgpl-btn-pip {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Focus states for accessibility */
+
+@media (max-width: 340px) {
+    .rgpl-volume-control .rgpl-progress-control {
+        width: 40px !important;
+        max-width: 40px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .rgpl-settings.active .rgpl-settings-main-list--visible {
+        width: 94vw !important;
+    }
+
+    .rgpl-settings .rgpl-settings-header__text {
+        font-size: 14px !important;
+    }
+
+    .shidurim-drawer {
+        min-height: 160px !important;
+    }
+
+    /* Unmute overlay - extra small screens */
+    .rgpl-unmute-overlay span {
+        padding: 12px 24px !important;
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 767px) {
+
+    /* Make the main seek bar easier to catch and drag on touch devices */
+    .rgpl-control-group-controls>.rgpl-progress-control {
+        height: 20px !important;
+        align-items: center !important;
+        padding: 7px 0 !important;
+        background: transparent !important;
+        touch-action: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .rgpl-control-group-controls>.rgpl-progress-control::before {
+        content: "" !important;
+        position: absolute !important;
+        inset: -10px 0 !important;
+        background: transparent !important;
+    }
+
+    .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-control-inner,
+    .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-bar,
+    .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-video {
+        height: 4px !important;
+        border-radius: 999px !important;
+    }
+
+    .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-control-drag {
+        width: 15px !important;
+        height: 15px !important;
+        border-width: 2px !important;
+        box-shadow:
+            0 0 0 4px rgba(237, 42, 42, 0.16),
+            0 2px 8px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .rgpl-controls-bar.progress-dragging .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-bar {
+        background: rgba(255, 255, 255, 0.32) !important;
+    }
+
+    .rgpl-controls-bar.progress-dragging .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-video {
+        box-shadow: 0 0 12px rgba(237, 42, 42, 0.35) !important;
+    }
+
+    .rgpl-controls-bar.progress-dragging .rgpl-control-group-controls>.rgpl-progress-control .rgpl-progress-control-drag {
+        transform: translate(-50%, -50%) scale(1.08) !important;
+        box-shadow:
+            0 0 0 6px rgba(237, 42, 42, 0.22),
+            0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .seek-tooltip {
+        font-size: 14px;
+        padding: 6px 10px;
+        border-radius: 7px;
+    }
+}
+
+/* ==============================================
+     UNMUTE OVERLAY
+     ============================================== */
+
+.rgpl-unmute-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 9999 !important;
+    cursor: pointer !important;
+    animation: unmuteOverlayFadeIn 0.3s ease-out !important;
+}
+
+.rgpl-unmute-overlay span {
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    padding: 20px 40px !important;
+    background: linear-gradient(135deg,
+            rgba(236, 42, 42, 0.15),
+            rgba(255, 255, 255, 0.08)) !important;
+    border: 2px solid rgba(236, 42, 42, 0.5) !important;
+    border-radius: 16px !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    font-family: "SimonaPro", sans-serif !important;
+    letter-spacing: 0.3px !important;
+    backdrop-filter: blur(12px) !important;
+    box-shadow: 0 8px 32px rgba(236, 42, 42, 0.3), 0 0 0 0 rgba(236, 42, 42, 0.4) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    animation: unmutePulse 2s ease-in-out infinite !important;
+}
+
+/* Volume icon before text */
+.rgpl-unmute-overlay span::before {
+    content: "" !important;
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+    animation: volumeIconBounce 2s ease-in-out infinite !important;
+}
+
+/* Hover effect */
+.rgpl-unmute-overlay:hover span {
+    background: linear-gradient(135deg,
+            rgba(236, 42, 42, 0.3),
+            rgba(255, 255, 255, 0.15)) !important;
+    border-color: rgba(236, 42, 42, 0.8) !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 12px 48px rgba(236, 42, 42, 0.5),
+        0 0 0 8px rgba(236, 42, 42, 0.15) !important;
+}
+
+/* Click/Active effect */
+.rgpl-unmute-overlay:active span {
+    transform: scale(0.98) !important;
+    box-shadow: 0 4px 16px rgba(236, 42, 42, 0.4) !important;
+}
+
+/* Pulsing animation for the span */
+@keyframes unmutePulse {
+
+    0%,
+    100% {
+        box-shadow: 0 8px 32px rgba(236, 42, 42, 0.3),
+            0 0 0 0 rgba(236, 42, 42, 0.4) !important;
+    }
+
+    50% {
+        box-shadow: 0 8px 32px rgba(236, 42, 42, 0.4),
+            0 0 0 12px rgba(236, 42, 42, 0) !important;
+    }
+}
+
+/* Volume icon bounce animation */
+@keyframes volumeIconBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Overlay fade in animation */
+@keyframes unmuteOverlayFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+    }
+}
+
+/* ==============================================
+   SEEK INDICATOR – YouTube style
+   ============================================== */
+
+.seek-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.18s ease;
+}
+
+#seek-indicator-forward {
+    right: 14px;
+}
+
+#seek-indicator-backward {
+    left: 14px;
+}
+
+.seek-indicator.visible {
+    opacity: 1;
+}
+
+/* Inner content wrapper */
+.seek-indicator__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Arrow chevrons */
+.seek-indicator__arrows {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.seek-indicator__arrows span {
+    display: block;
+    opacity: 0;
+    font-size: 23px;
+    line-height: 1;
+    color: white;
+    filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.55));
+}
+
+#seek-indicator-forward .seek-indicator__arrows span::before {
+    content: "❯";
+}
+
+#seek-indicator-backward .seek-indicator__arrows {
+    flex-direction: row-reverse;
+}
+
+#seek-indicator-backward .seek-indicator__arrows span::before {
+    content: "❮";
+}
+
+/* Cascade animation triggered on bump */
+.seek-indicator.bump .seek-indicator__arrows span {
+    animation: chevronCascade 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.seek-indicator.bump .seek-indicator__arrows span:nth-child(1) {
+    animation-delay: 0.0s;
+}
+
+.seek-indicator.bump .seek-indicator__arrows span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.seek-indicator.bump .seek-indicator__arrows span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes chevronCascade {
+    0%   { opacity: 0;    transform: translateX(-10px) scale(0.6); }
+    25%  { opacity: 1;    transform: translateX(2px)   scale(1.1); }
+    50%  { opacity: 0.9;  transform: translateX(0)     scale(1);   }
+    80%  { opacity: 0.55; transform: translateX(0)     scale(1);   }
+    100% { opacity: 0.15; transform: translateX(0)     scale(1);   }
+}
+
+#seek-indicator-backward.bump .seek-indicator__arrows span {
+    animation-name: chevronCascadeBwd;
+}
+
+@keyframes chevronCascadeBwd {
+    0%   { opacity: 0;    transform: translateX(10px) scale(0.6); }
+    25%  { opacity: 1;    transform: translateX(-2px) scale(1.1); }
+    50%  { opacity: 0.9;  transform: translateX(0)    scale(1);   }
+    80%  { opacity: 0.55; transform: translateX(0)    scale(1);   }
+    100% { opacity: 0.15; transform: translateX(0)    scale(1);   }
+}
+
+/* Time text */
+.seek-indicator__time {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    direction: ltr;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.3;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 479px) {
+    .seek-indicator__arrows span {
+        font-size: 18px;
+    }
+
+    .seek-indicator__time {
+        font-size: 13px;
+    }
+}
+
+/* ======================== */
+/* Seek time tooltip        */
+/* ======================== */
+.seek-tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.78);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 4px 9px;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+        opacity 0.12s ease,
+        transform 0.12s ease;
+}
+
+.seek-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.seek-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.78);
+}

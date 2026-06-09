@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="he">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="redge_player.css?v=12214" />
+    <title>Redge Player</title>
+  </head>
+
+  <body>
+    <section class="redge-player-container">
+      <div id="player">
+        <div class="shidurim-list-container">
+          <div class="shidurim-trigger">
+            <div class="shidurim-arrow">
+              <img src="../icons/RedgePlayer/shidurim-arrow.svg" alt="Arrow" />
+            </div>
+            <div>
+              <h1>לוח שידורים</h1>
+            </div>
+          </div>
+
+          <div class="shidurim-drawer">
+            <div class="shidurim-drawer-header">
+              <h2>לוח שידורים</h2>
+              <button class="shidurim-drawer-close">&times;</button>
+            </div>
+            <div class="shidurim-drawer-content">
+              <div class="shidurim-list">
+                <!-- dumny items -->
+                <div class="shidurim-item">
+                  <div class="shidurim-time">12:30</div>
+                  <div class="shidurim-title">מבזק</div>
+                </div>
+                <div class="shidurim-item active">
+                  <div class="shidurim-time">12:35</div>
+                  <div class="shidurim-title">על הבוקר</div>
+                  <div class="live-indicator">LIVE</div>
+                </div>
+                <div class="shidurim-item">
+                  <div class="shidurim-time">12:30</div>
+                  <div class="shidurim-title">מבזק</div>
+                </div>
+                <div class="shidurim-item">
+                  <div class="shidurim-time">12:30</div>
+                  <div class="shidurim-title">מבזק</div>
+                </div>
+                <div class="shidurim-item">
+                  <div class="shidurim-time">12:30</div>
+                  <div class="shidurim-title">מבזק</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speed button (hiddenn until controls are ready) -->
+      <div>
+        <div
+          class="speed-btn"
+          style="color: white; display: none; cursor: pointer"
+        >
+          1x
+        </div>
+      </div>
+
+      <!-- Seek accumulator indicators – YouTube style -->
+      <div class="seek-indicator" id="seek-indicator-forward">
+        <div class="seek-indicator__inner">
+          <div class="seek-indicator__arrows">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="seek-indicator__time"></div>
+        </div>
+      </div>
+      <div class="seek-indicator" id="seek-indicator-backward">
+        <div class="seek-indicator__inner">
+          <div class="seek-indicator__arrows">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="seek-indicator__time"></div>
+        </div>
+      </div>
+
+      <div id="seek-tooltip" class="seek-tooltip"></div>
+    </section>
+
+    <!-- External scripts -->
+
+    <script
+      src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
+      defer
+    ></script>
+
+    <script
+      src="https://r.il.cdn-redge.media/file/oil/ch14/player/3.5.0/js/redgalaxy-player-3.5.0.min.js"
+      type="module"
+      defer
+    ></script>
+
+    <script
+      src="https://r.il.cdn-redge.media/file/oil/ch14/player/wrapper/wrapper-2.0.0.js"
+      type="module"
+      defer
+    ></script>
+
+    <script type="module">
+      const API_URL =
+        "https://www.c14.co.il/wp-json/now14-api/v1/redgeShidurim";
+
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobileApp =
+        userAgent.indexOf("now14android") > -1 ||
+        userAgent.indexOf("now14ios") > -1;
+
+      if (isMobileApp) {
+        document.documentElement.classList.add("redge-no-pip");
+      }
+
+      function getGamSessionCorrelator() {
+        const KEY = "gam_session_correlator";
+
+        try {
+          const existing = sessionStorage.getItem(KEY);
+          if (existing && /^\d+$/.test(existing)) {
+            return Number(existing);
+          }
+
+          const newCorrelator = Math.floor(Math.random() * 1e12);
+
+          sessionStorage.setItem(KEY, String(newCorrelator));
+          return newCorrelator;
+        } catch (e) {
+          return Math.floor(Math.random() * 1e12);
+        }
+      }
+
+      //  Fetch data function
+      async function loadSchedule() {
+        try {
+          const response = await fetch(API_URL);
+
+          console.log("Fetch responseeeee:", response);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          if (data.error === true) {
+            const listContainerForErr =
+              document.querySelector(".shidurim-list");
+            listContainerForErr.innerHTML = `<p class='errMsg'>${data.message}</p>`;
+            return;
+          }
+
+          console.log("Schedule Data:", data);
+
+          const { shidurim } = data;
+          renderSchedule(shidurim);
+        } catch (error) {
+          console.error("Failed to fetch schedule:", error);
+        }
+      }
+
+      // Render schedulee list
+      function renderSchedule(shows) {
+        const listContainer = document.querySelector(".shidurim-list");
+        listContainer.innerHTML = "";
+        shows.forEach((show) => {
+          const item = document.createElement("div");
+          item.className = `shidurim-item ${show.isLive ? "active" : ""}`;
+          item.innerHTML = `
+               <div class="shidurim-time">
+                  ${show.isLive ? '<div class="live-indicator">LIVE</div>' : ""}
+                ${show.start} - ${show.end}
+
+                </div>
+               <div class="shidurim-title">${show.program}</div>
+             `;
+          listContainer.appendChild(item);
+        });
+
+        // scroll to active show
+        const activeItem = document.querySelector(".shidurim-item.active");
+        if (activeItem) {
+          activeItem.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      // Call it when page/vid loads
+      loadSchedule();
+
+      // ========================
+      // Drawer functionality
+      // ========================
+      const shidurimTrigger = document.querySelector(".shidurim-trigger");
+      const shidurimContainer = document.querySelector(
+        ".shidurim-list-container"
+      );
+      const shidurimCloseBtn = document.querySelector(".shidurim-drawer-close");
+
+      function openDrawer() {
+        shidurimContainer.classList.add("open");
+        shidurimContainer.classList.remove("close");
+      }
+
+      function closeDrawer() {
+        shidurimContainer.classList.remove("open");
+        shidurimContainer.classList.add("close");
+      }
+
+      function toggleDrawer() {
+        if (shidurimContainer.classList.contains("open")) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      }
+
+      // Note: Event listeners will be set up after auto-collapse functions are defined
+
+      // ========================
+      // Player & Speed button
+      // ========================
+      const speedBtn = document.querySelector(".speed-btn");
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoID = urlParams.get("videoID");
+      const isLive = urlParams.get("live");
+      const category = urlParams.get("category");
+      const autoplay = urlParams.get("autoplay");
+      const noAds = urlParams.get("noAds") === "true";
+
+      const dxseg = window.localStorage.getItem(
+        "dmp-publisher-prevDefinitionsIds"
+      );
+      const dxu = window.localStorage.getItem("dmp-publisher-dmpid");
+      const idxCustomParams = `&cust_params=dxseg%3D${encodeURIComponent(
+        dxseg
+      )}%26dxu%3D${dxu}${
+        category ? `%26category%3D${encodeURIComponent(category)}` : ""
+      }`;
+
+      const vastUrl = isLive
+        ? "https://pubads.g.doubleclick.net/gampad/ads?iu=/136431902,22673782353/Now14/Desktop/preroll_midrolls_live&description_url=https%3A%2F%2Fwww.c14.co.il%2Flive%3Ft%3D1&tfcd=0&npa=0&sz=1x1%7C400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator="
+        : "https://pubads.g.doubleclick.net/gampad/ads?iu=/136431902,22673782353/Now14/MobileWeb/live_video_preroll&description_url=https%3A%2F%2Fwww.c14.co.il%2F&tfcd=0&npa=0&sz=1x1%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=";
+
+      const setup = {
+        file: {
+          hls: isLive
+            ? "https://r.il.cdn-redge.media/livehls/oil/ch14/live/ch14/live.livx/playlist.m3u8"
+            : `https://channel14.vod.immergo.tv/channel14/transcoded/${videoID}/hls/master.m3u8`,
+        },
+        width: "100vw",
+        height: "100vh",
+        autoplayBlockedRule: "mute",
+        autoplay: autoplay === "true" ? true : false,
+        keyboardEvents: true,
+        playsInline: true,
+        liveDelay: 25,
+        defaultGuiLanguage: "heb",
+        volumeType: "horizontal",
+        seekPrecision: "time",
+        defaultLiveDelay: 15,
+        minBufferTime: 0,
+        maxBufferLength: 20,
+        bufferBehind: 30,
+        pip: {
+          available: isMobileApp ? false : true,
+        },
+        live: isLive ? true : false,
+        type: isLive ? "LIVE" : "VOD",
+        ...(isLive && {
+          timeShift: {
+            dvrWindow: 7200,
+          },
+        }),
+        ...(!noAds && {
+          advert:
+            vastUrl +
+            getGamSessionCorrelator() +
+            "&pmad=2&pmnd=1&pmxd=90000&vpos=preroll&" +
+            idxCustomParams,
+          advertLabel: "Advertisement",
+          advertWithCredentials: false,
+          googleIma: true,
+        }),
+      };
+
+      const dmpid = window.localStorage.getItem("dmp-publisher-dmpid");
+
+      function getOrCreatePPID() {
+        const PPID_KEY = "now14-ppid";
+        let ppid = window.localStorage.getItem(PPID_KEY);
+        if (!ppid) {
+          ppid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+            /[xy]/g,
+            (c) => {
+              const r = (Math.random() * 16) | 0;
+              const v = c === "x" ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            }
+          );
+          window.localStorage.setItem(PPID_KEY, ppid);
+        }
+        return ppid;
+      }
+
+      const ppid = getOrCreatePPID();
+
+      const playerWrapper = new Wrapper();
+
+      let playerSetup = setup;
+      if (isLive && !noAds) {
+        playerSetup = playerWrapper.generateFiles(setup, {
+          addIndexMode: true,
+          addRenditions: true,
+          daiEnabled: true,
+          daiUrl:
+            "https://r.il.cdn-redge.media/livedash/oil/ch14/live/ch14/dai.livx",
+          daiParams: {
+            server_side_events: 0,
+            correlator: getGamSessionCorrelator(),
+            // pmad: 11,
+            npa: 0,
+            ppid: ppid,
+            ad_session_id: "1x",
+            playbackStart: Date.now(),
+          },
+          daiCustParams: `dxseg=${dxseg}&dxu=${dxu}${category ? `&category=${category}` : ""}`,
+        });
+      }
+
+      const player = new redGalaxy.Player("player").setup(playerSetup);
+
+      if (isLive && !noAds) {
+        player.on("streamEvent", playerWrapper.onStreamEvent);
+      }
+      let wasAtLiveEdge = false;
+      let speedBtnSyncTimers = [];
+
+      function clearSpeedBtnSyncTimers() {
+        speedBtnSyncTimers.forEach((timerId) => clearTimeout(timerId));
+        speedBtnSyncTimers = [];
+      }
+
+      function scheduleSpeedBtnSync() {
+        clearSpeedBtnSyncTimers();
+        [0, 80, 180, 350].forEach((delay) => {
+          const timerId = setTimeout(() => {
+            updateSpeedBtnVisibility();
+            speedBtnSyncTimers = speedBtnSyncTimers.filter(
+              (id) => id !== timerId
+            );
+          }, delay);
+          speedBtnSyncTimers.push(timerId);
+        });
+      }
+
+      function isCurrentlyAtLiveEdge() {
+        const liveBtn = document.querySelector(".rgpl-btn-live");
+        return (
+          Boolean(isLive) &&
+          liveBtn &&
+          !liveBtn.classList.contains("timeshift-live-mode-off")
+        );
+      }
+
+      function updateSpeedBtnVisibility() {
+        if (!speedBtn) return;
+
+        const controlsGroup = document.querySelector(
+          ".rgpl-control-group-controls"
+        );
+        if (controlsGroup && !controlsGroup.contains(speedBtn)) {
+          controlsGroup.appendChild(speedBtn);
+          speedBtn.style.display = "flex";
+        }
+
+        const isAtLiveEdge = isCurrentlyAtLiveEdge();
+
+        if (isAtLiveEdge && !wasAtLiveEdge) {
+          resetPlaybackSpeed();
+        }
+
+        speedBtn.classList.toggle("is-hidden-live", Boolean(isAtLiveEdge));
+        wasAtLiveEdge = Boolean(isAtLiveEdge);
+      }
+
+      // ========================
+      // Seek time tooltip
+      // ========================
+      function initSeekTooltip() {
+        const tooltip = document.getElementById("seek-tooltip");
+        let isDragging = false;
+
+        function getVideoDuration() {
+          if (typeof player.getDuration === "function") {
+            const d = player.getDuration();
+            if (d && isFinite(d)) return d;
+          }
+          const video = document.querySelector("video");
+          return video && isFinite(video.duration) ? video.duration : 0;
+        }
+
+        function formatTime(seconds) {
+          const h = Math.floor(seconds / 3600);
+          const m = Math.floor((seconds % 3600) / 60);
+          const s = Math.floor(seconds % 60);
+          return h > 0
+            ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+            : `${m}:${String(s).padStart(2, "0")}`;
+        }
+
+        function getMainProgressBar() {
+          return document.querySelector(
+            ".rgpl-control-group-controls > .rgpl-progress-control"
+          );
+        }
+
+        function updateTooltip(e) {
+          const bar = getMainProgressBar();
+          if (!bar) return;
+          const duration = getVideoDuration();
+          if (!duration) return;
+          const rect = bar.getBoundingClientRect();
+          const pct = Math.max(
+            0,
+            Math.min(1, (e.clientX - rect.left) / rect.width)
+          );
+          tooltip.textContent = formatTime(pct * duration);
+          const x = Math.max(
+            0,
+            Math.min(
+              window.innerWidth - tooltip.offsetWidth,
+              e.clientX - tooltip.offsetWidth / 2
+            )
+          );
+          const y = rect.top - tooltip.offsetHeight - 10;
+          tooltip.style.left = `${x}px`;
+          tooltip.style.top = `${y}px`;
+          tooltip.classList.add("visible");
+        }
+
+        function hideTooltip() {
+          if (!isDragging) tooltip.classList.remove("visible");
+        }
+
+        function clientXFromEvent(e) {
+          if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+          if (e.changedTouches && e.changedTouches.length > 0)
+            return e.changedTouches[0].clientX;
+          return e.clientX;
+        }
+
+        // ── Mouse events ──
+        document.addEventListener("mousemove", (e) => {
+          const bar = getMainProgressBar();
+          if (!bar) return;
+          if (
+            isDragging ||
+            e.target.closest(
+              ".rgpl-control-group-controls > .rgpl-progress-control"
+            )
+          ) {
+            updateTooltip(e);
+          } else if (!isDragging) {
+            tooltip.classList.remove("visible");
+          }
+        });
+
+        document.addEventListener("mousedown", (e) => {
+          if (
+            e.target.closest(
+              ".rgpl-control-group-controls > .rgpl-progress-control"
+            )
+          ) {
+            isDragging = true;
+          }
+        });
+
+        document.addEventListener("mouseup", () => {
+          isDragging = false;
+          tooltip.classList.remove("visible");
+        });
+
+        document.addEventListener("mouseleave", hideTooltip);
+
+        // ── Touch events ──
+        document.addEventListener(
+          "touchstart",
+          (e) => {
+            if (
+              e.target.closest(
+                ".rgpl-control-group-controls > .rgpl-progress-control"
+              )
+            ) {
+              isDragging = true;
+              updateTooltip({ clientX: clientXFromEvent(e) });
+            }
+          },
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "touchmove",
+          (e) => {
+            if (!isDragging) return;
+            updateTooltip({ clientX: clientXFromEvent(e) });
+          },
+          { passive: true }
+        );
+
+        document.addEventListener("touchend", () => {
+          isDragging = false;
+          tooltip.classList.remove("visible");
+        });
+
+        document.addEventListener("touchcancel", () => {
+          isDragging = false;
+          tooltip.classList.remove("visible");
+        });
+      }
+
+      // ========================
+      // Accessibility observer
+      // ========================
+      function updateLiveSeekControlsVisibility() {
+        const shouldHideForward = isCurrentlyAtLiveEdge();
+        const forwardButtons = document.querySelectorAll(
+          ".rgpl-btn-jump-forward"
+        );
+
+        forwardButtons.forEach((button) => {
+          if (shouldHideForward) {
+            button.style.display = "none";
+            button.setAttribute("aria-hidden", "true");
+            button.setAttribute("tabindex", "-1");
+          } else {
+            button.style.display = "";
+            button.removeAttribute("aria-hidden");
+            button.removeAttribute("tabindex");
+          }
+        });
+      }
+
+      player.on("ready", () => {
+        initAccessibilityObserver();
+        initSeekTooltip();
+        updateLiveSeekControlsVisibility();
+      });
+
+      player.on("error", (errorObj) => {
+        console.error("[Redge Player Error]", errorObj.code, errorObj.message);
+      });
+
+      function initAccessibilityObserver() {
+        const setAriaIfExists = (selector, label) => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((el) => {
+            if (label && !el.getAttribute("aria-label")) {
+              el.setAttribute("aria-label", label);
+            }
+            if (!el.getAttribute("role")) {
+              el.setAttribute("role", "button");
+            }
+            if (el.children?.length > 0) {
+              [...el.children].forEach((child) => {
+                child.setAttribute("aria-hidden", "true");
+              });
+            }
+          });
+        };
+
+        const hideIframesInPlayer = () => {
+          const containers = document.querySelectorAll(".rgpl-vpaid-container");
+          containers.forEach((container) => {
+            const ads = container.querySelectorAll('[title="Advertisement"]');
+            ads.forEach((ad) => {
+              ad.setAttribute("aria-hidden", "true");
+            });
+          });
+        };
+
+        const setAdvertCounterAria = () => {
+          const counters = document.querySelectorAll(".rgpl-advert-counter");
+          counters.forEach((counter) => {
+            const span = counter.querySelector("span");
+            if (!span) return;
+
+            const spanText = span.innerText.trim(); // "00:05 2/2" or "00:11"
+            const parts = spanText.split(" ");
+
+            const timePart = parts[0];
+            if (!timePart) return;
+            const [mm, ss] = timePart.split(":").map((n) => parseInt(n, 10));
+            if (isNaN(mm) || isNaN(ss)) return;
+            const timeLabel =
+              mm > 0 ? `${mm} דקות ו-${ss} שניות` : `${ss} שניות`;
+
+            let current = null;
+            let total = null;
+            if (parts[1] && parts[1].includes("/")) {
+              const [c, t] = parts[1].split("/");
+              current = parseInt(c, 10);
+              total = parseInt(t, 10);
+              if (isNaN(current) || isNaN(total)) return;
+            }
+
+            let aria = `פרסומת, נותרו ${timeLabel}`;
+            if (current && total) {
+              aria += `, פרסומת ${current} מתוך ${total}`;
+            }
+
+            span.setAttribute("aria-hidden", "true");
+            counter.setAttribute("aria-label", aria);
+          });
+        };
+
+        const ARIA_MAP = [
+          { selector: ".rgpl-btn-play", label: "ניגון והשהיה" },
+          { selector: ".rgpl-btn-pause", label: "ניגון והשהיה" },
+          { selector: ".rgpl-btn-volume", label: "" },
+          { selector: ".rgpl-btn-fullscreen", label: "מסך מלא" },
+          { selector: ".rgpl-btn-jump-forward", label: "דלג קדימה 10 שניות" },
+          { selector: ".rgpl-btn-jump-backward", label: "חזור אחורה 10 שניות" },
+          { selector: ".rgpl-btn-live", label: "שידור חי" },
+          { selector: ".rgpl-btn-settings", label: "הגדרות" },
+        ];
+        ARIA_MAP.forEach((item) => setAriaIfExists(item.selector, item.label));
+
+        const observer = new MutationObserver(() => {
+          ARIA_MAP.forEach((item) =>
+            setAriaIfExists(item.selector, item.label)
+          );
+          hideIframesInPlayer();
+          setAdvertCounterAria();
+          updateSpeedBtnVisibility();
+          updateLiveSeekControlsVisibility();
+        });
+
+        observer.observe(document.getElementById("player"), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
+
+      // ========================
+      // Speed button logic
+      // ========================
+      const playbackRates = [1, 1.5, 2]; // numeric rates
+      let currentRateIndex = 0;
+
+      function applyPlaybackRate(rateIndex) {
+        currentRateIndex = rateIndex;
+        const newRate = playbackRates[currentRateIndex];
+        player.setPlaybackRate(newRate);
+        speedBtn.textContent = newRate + "x";
+      }
+
+      function resetPlaybackSpeed() {
+        applyPlaybackRate(0);
+      }
+
+      player.once("playing", () => {
+        function tryAppendSpeedBtn() {
+          const controlsGroup = document.querySelector(
+            ".rgpl-control-group-controls"
+          );
+          if (controlsGroup) {
+            controlsGroup.appendChild(speedBtn);
+            speedBtn.style.display = "flex";
+            applyPlaybackRate(currentRateIndex);
+            updateSpeedBtnVisibility();
+          } else {
+            requestAnimationFrame(tryAppendSpeedBtn);
+          }
+        }
+        tryAppendSpeedBtn();
+      });
+
+      speedBtn.addEventListener("click", () => {
+        applyPlaybackRate((currentRateIndex + 1) % playbackRates.length);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".rgpl-btn-live")) {
+          scheduleSpeedBtnSync();
+        }
+      });
+
+      // ========================
+      // Auto-collapse shidurim after 5 seconds of playback
+      // ========================
+      let shidurimCollapsed = false;
+      let playbackTimer = null;
+      let playbackTime = 0;
+
+      function collapseShidurim() {
+        shidurimTrigger.classList.add("collapsed");
+        shidurimCollapsed = true;
+      }
+
+      function expandShidurim() {
+        shidurimTrigger.classList.remove("collapsed");
+        shidurimTrigger.classList.remove("hover-expand");
+        shidurimCollapsed = false;
+        playbackTime = 0;
+      }
+
+      function startCollapseTimer() {
+        if (playbackTimer) clearInterval(playbackTimer);
+
+        playbackTimer = setInterval(() => {
+          // Only count if drawer is closed
+          if (!shidurimContainer.classList.contains("open")) {
+            playbackTime++;
+            if (playbackTime >= 5 && !shidurimCollapsed) {
+              collapseShidurim();
+              clearInterval(playbackTimer);
+              playbackTimer = null;
+            }
+          }
+        }, 1000);
+      }
+
+      function stopCollapseTimer() {
+        if (playbackTimer) {
+          clearInterval(playbackTimer);
+          playbackTimer = null;
+        }
+      }
+
+      // Track playback time
+      player.on("playing", () => {
+        startCollapseTimer();
+      });
+
+      player.on("pause", () => {
+        stopCollapseTimer();
+      });
+
+      player.on("ended", () => stopCollapseTimer());
+      player.on("stopped", () => stopCollapseTimer());
+
+      // Expand on hover when collapsed
+      shidurimTrigger.addEventListener("mouseenter", () => {
+        if (
+          shidurimCollapsed &&
+          !shidurimContainer.classList.contains("open")
+        ) {
+          shidurimTrigger.classList.add("hover-expand");
+        }
+      });
+
+      shidurimTrigger.addEventListener("mouseleave", () => {
+        shidurimTrigger.classList.remove("hover-expand");
+      });
+
+      // ========================
+      // Drawer event handlers with auto-collapse reset
+      // ========================
+
+      function openDrawerWithReset() {
+        openDrawer();
+        stopCollapseTimer();
+        shidurimTrigger.classList.remove("collapsed");
+        shidurimTrigger.classList.remove("hover-expand");
+      }
+
+      function closeDrawerWithReset() {
+        closeDrawer();
+        expandShidurim();
+        startCollapseTimer();
+      }
+
+      function toggleDrawerWithReset() {
+        if (shidurimContainer.classList.contains("open")) {
+          closeDrawerWithReset();
+        } else {
+          openDrawerWithReset();
+        }
+      }
+
+      let suppressDblClickUntil = 0;
+      let lastMouseClickTime = 0;
+      let lastMouseClickDirection = null;
+
+      document.addEventListener(
+        "pointerup",
+        function (e) {
+          if (e.pointerType !== "mouse" || e.button !== 0) return;
+
+          const playerTarget = e.target.closest("#player");
+          if (!playerTarget) return;
+
+          if (
+            e.target.closest(".rgpl-control-bar") ||
+            e.target.closest(".shidurim-list-container") ||
+            e.target.closest(".speed-btn")
+          )
+            return;
+
+          const direction = getSeekDirectionFromClientX(
+            playerTarget,
+            e.clientX
+          );
+
+          if (direction === null) {
+            lastMouseClickTime = 0;
+            lastMouseClickDirection = null;
+            return;
+          }
+
+          if (direction && isCurrentlyAtLiveEdge()) {
+            lastMouseClickTime = 0;
+            lastMouseClickDirection = null;
+            return;
+          }
+
+          const now = Date.now();
+          const isDoubleClick =
+            now - lastMouseClickTime < 300 &&
+            lastMouseClickDirection === direction;
+
+          if (!isDoubleClick) {
+            lastMouseClickTime = now;
+            lastMouseClickDirection = direction;
+            return;
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+
+          suppressDblClickUntil = now + 500;
+          lastMouseClickTime = 0;
+          lastMouseClickDirection = null;
+
+          seekBy(direction ? 10 : -10);
+          showSeekFeedback(direction);
+          return false;
+        },
+        true
+      );
+
+      document.addEventListener(
+        "click",
+        function (e) {
+          const target = e.target.closest(".rgpl-action-area");
+          if (!target) return;
+
+          // Allow clicks on overlay buttons when the overlay is visible
+          const overlayBtn = e.target.closest(
+            ".rgpl-btn-play, .rgpl-btn-pause, .rgpl-btn-jump-forward, .rgpl-btn-jump-backward"
+          );
+          if (overlayBtn) {
+            const overlay = document.querySelector(".rgpl-overlay-buttons");
+            if (overlay) {
+              const style = window.getComputedStyle(overlay);
+              const isVisible =
+                style.opacity !== "0" &&
+                style.visibility !== "hidden" &&
+                style.display !== "none";
+              if (isVisible) return;
+            }
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          return false;
+        },
+        true // capture mode – קריטי
+      );
+
+      // Block +10 / -10 jump button clicks when the overlay is not visible.
+      // Mirrors the same capture-mode guard used for the play button above.
+      document.addEventListener(
+        "click",
+        function (e) {
+          const jumpBtn = e.target.closest(
+            ".rgpl-btn-jump-forward, .rgpl-btn-jump-backward"
+          );
+          if (!jumpBtn) return;
+
+          if (
+            jumpBtn.classList.contains("rgpl-btn-jump-forward") &&
+            isCurrentlyAtLiveEdge()
+          ) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
+          }
+
+          const overlay = document.querySelector(".rgpl-overlay-buttons");
+          if (!overlay) return;
+
+          const style = window.getComputedStyle(overlay);
+          const overlayHidden =
+            style.opacity === "0" ||
+            style.visibility === "hidden" ||
+            style.display === "none" ||
+            overlay.classList.contains("hidden") ||
+            overlay.style.pointerEvents === "none";
+
+          if (overlayHidden) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            return false;
+          }
+        },
+        true // capture mode
+      );
+
+      // ========================
+      // Seek helpers
+      // ========================
+      function seekBy(seconds) {
+        player.seekTo(player.getCurrentTime() + seconds);
+      }
+
+      function showSeekFeedback(isForward) {
+        const selector = isForward
+          ? ".rgpl-btn-jump-forward"
+          : ".rgpl-btn-jump-backward";
+        const btn = document.querySelector(selector);
+        if (btn) triggerBtnPulse(btn);
+        showSeekIndicator(isForward, 10);
+      }
+
+      function getSeekDirectionFromClientX(playerTarget, clientX) {
+        const rect = playerTarget.getBoundingClientRect();
+        const relativeX = clientX - rect.left;
+        const isRightZone = relativeX > rect.width * 0.85;
+        const isLeftZone = relativeX < rect.width * 0.15;
+
+        if (isRightZone) return true;
+        if (isLeftZone) return false;
+        return null;
+      }
+
+      // ========================
+      // Seek accumulator indicators
+      // ========================
+      const seekIndicatorFwd = document.getElementById(
+        "seek-indicator-forward"
+      );
+      const seekIndicatorBwd = document.getElementById(
+        "seek-indicator-backward"
+      );
+      let seekAccFwd = 0;
+      let seekAccBwd = 0;
+      let seekTimerFwd = null;
+      let seekTimerBwd = null;
+
+      function showSeekIndicator(isForward, seconds) {
+        const el = isForward ? seekIndicatorFwd : seekIndicatorBwd;
+        const timeEl = el.querySelector(".seek-indicator__time");
+
+        if (isForward) {
+          seekAccFwd += seconds;
+          clearTimeout(seekTimerFwd);
+          timeEl.textContent = "+" + seekAccFwd + "s";
+          seekTimerFwd = setTimeout(() => {
+            el.classList.remove("visible");
+            setTimeout(() => {
+              seekAccFwd = 0;
+            }, 300);
+          }, 1600);
+        } else {
+          seekAccBwd += seconds;
+          clearTimeout(seekTimerBwd);
+          timeEl.textContent = "-" + seekAccBwd + "s";
+          seekTimerBwd = setTimeout(() => {
+            el.classList.remove("visible");
+            setTimeout(() => {
+              seekAccBwd = 0;
+            }, 300);
+          }, 1600);
+        }
+
+        el.classList.remove("bump");
+        void el.offsetWidth;
+        el.classList.add("visible", "bump");
+        setTimeout(() => el.classList.remove("bump"), 1400);
+      }
+
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".rgpl-btn-jump-forward")) {
+          if (isCurrentlyAtLiveEdge()) return;
+          showSeekIndicator(true, 10);
+        } else if (e.target.closest(".rgpl-btn-jump-backward")) {
+          showSeekIndicator(false, 10);
+        }
+      });
+
+      // Double-click: seek ±10s (desktop)
+      document.addEventListener(
+        "dblclick",
+        function (e) {
+          const target = e.target.closest("#player");
+          if (!target) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+
+          if (Date.now() < suppressDblClickUntil) return false;
+
+          if (
+            e.target.closest(".rgpl-control-bar") ||
+            e.target.closest(".shidurim-list-container") ||
+            e.target.closest(".speed-btn")
+          )
+            return false;
+
+          const direction = getSeekDirectionFromClientX(target, e.clientX);
+          if (direction === null) return false;
+
+          if (direction && isCurrentlyAtLiveEdge()) return false;
+
+          if (direction) {
+            seekBy(10);
+            showSeekFeedback(true);
+          } else {
+            seekBy(-10);
+            showSeekFeedback(false);
+          }
+
+          return false;
+        },
+        true
+      );
+
+      // ========================
+      // Touch gesture controls
+      // ========================
+      // Single tap  → event propagates naturally to the player → controls appear.
+      //               The existing click interceptor on .rgpl-action-area already
+      //               prevents play/pause from toggling.
+      // Double tap  → we block touchend and seek ±10 s manually.
+
+      let lastTapTime = 0;
+
+      document.addEventListener(
+        "touchend",
+        function (e) {
+          const playerTarget = e.target.closest("#player");
+          if (!playerTarget) return;
+
+          // Pass through taps on the control bar, shidurim drawer and speed button
+          if (
+            e.target.closest(".rgpl-control-bar") ||
+            e.target.closest(".shidurim-list-container") ||
+            e.target.closest(".speed-btn")
+          )
+            return;
+
+          const now = Date.now();
+          const timeSinceLast = now - lastTapTime;
+
+          if (timeSinceLast < 300 && timeSinceLast > 0) {
+            // ── Double tap: block and seek ──
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            suppressDblClickUntil = Date.now() + 500;
+            lastTapTime = 0;
+
+            const touch = e.changedTouches[0];
+            const direction = getSeekDirectionFromClientX(
+              playerTarget,
+              touch.clientX
+            );
+
+            if (direction === null) return;
+
+            if (direction && isCurrentlyAtLiveEdge()) return false;
+
+            if (direction) {
+              seekBy(10);
+              showSeekFeedback(true);
+            } else {
+              seekBy(-10);
+              showSeekFeedback(false);
+            }
+          } else {
+            // ── Single tap ──
+            lastTapTime = now;
+
+            // If tapping directly on an overlay button, let the subsequent
+            // click event handle it without restoring playback.
+            if (
+              e.target.closest(
+                ".rgpl-btn-play, .rgpl-btn-pause, .rgpl-btn-jump-forward, .rgpl-btn-jump-backward"
+              )
+            )
+              return;
+
+            // Let the event propagate so the player shows its full controls UI
+            // (center buttons, bottom bar, etc.) via its own internal logic.
+            // On Android the player may also toggle play/pause on touchend,
+            // so we record playback state and restore it right after.
+            const controlsBar = document.querySelector(".rgpl-controls-bar");
+            const controlsHidden =
+              controlsBar && controlsBar.classList.contains("hidden");
+            const video = document.querySelector("video");
+            const wasPlaying = video && !video.paused;
+
+            if (controlsHidden && wasPlaying) {
+              setTimeout(() => {
+                if (video && video.paused) video.play().catch(() => {});
+              }, 50);
+            }
+          }
+        },
+        true
+      );
+
+      // ========================
+      // Seek button pulse (double-click / double-tap only)
+      // ========================
+      function triggerBtnPulse(btn) {
+        btn.classList.remove("seek-btn-pulse");
+        void btn.offsetWidth;
+        btn.classList.add("seek-btn-pulse");
+        btn.addEventListener(
+          "animationend",
+          () => btn.classList.remove("seek-btn-pulse"),
+          { once: true }
+        );
+      }
+
+      // ========================
+      // Keep control bar visible while scrubbing progress bar
+      // ========================
+      let isDraggingProgress = false;
+      let progressLockRaf = null;
+
+      function getControlsBar() {
+        return document.querySelector(".rgpl-controls-bar");
+      }
+
+      function enforceControlBarVisible() {
+        if (!isDraggingProgress) return;
+        const bar = getControlsBar();
+        if (bar) {
+          bar.classList.remove("hidden");
+          bar.classList.add("progress-dragging");
+        }
+        progressLockRaf = requestAnimationFrame(enforceControlBarVisible);
+      }
+
+      function lockControlBar() {
+        if (isDraggingProgress) return;
+        isDraggingProgress = true;
+        enforceControlBarVisible();
+      }
+
+      function unlockControlBar() {
+        isDraggingProgress = false;
+        if (progressLockRaf) {
+          cancelAnimationFrame(progressLockRaf);
+          progressLockRaf = null;
+        }
+        const bar = getControlsBar();
+        if (bar) bar.classList.remove("progress-dragging");
+      }
+
+      document.addEventListener("mousedown", function (e) {
+        if (e.target.closest(".rgpl-progress-control")) lockControlBar();
+      });
+
+      document.addEventListener(
+        "touchstart",
+        function (e) {
+          if (e.target.closest(".rgpl-progress-control")) lockControlBar();
+        },
+        { passive: true }
+      );
+
+      document.addEventListener("mouseup", unlockControlBar);
+      document.addEventListener("touchend", unlockControlBar);
+      document.addEventListener("touchcancel", unlockControlBar);
+
+      document.addEventListener(
+        "click",
+        async function (e) {
+          if (!e.target.closest(".rgpl-btn-pip")) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+
+          const video = document.querySelector("video");
+          if (!video) return;
+
+          try {
+            if (document.pictureInPictureElement) {
+              await document.exitPictureInPicture();
+            } else if (document.pictureInPictureEnabled) {
+              await video.requestPictureInPicture();
+            }
+          } catch (err) {
+            console.warn("Native PIP failed:", err);
+          }
+        },
+        true // capture phase – always fires before element-level handlers
+      );
+
+      // Set up all event listeners
+      shidurimTrigger.addEventListener("click", toggleDrawerWithReset);
+      shidurimCloseBtn.addEventListener("click", closeDrawerWithReset);
+
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.key === "Escape" &&
+          shidurimContainer.classList.contains("open")
+        ) {
+          closeDrawerWithReset();
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          shidurimContainer.classList.contains("open") &&
+          !shidurimContainer.contains(e.target)
+        ) {
+          closeDrawerWithReset();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,15 +1,27 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
+import "@/global.css";
+import { getHome } from "@/services";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { I18nManager, useColorScheme } from "react-native";
 
-export default function TabLayout() {
+// Force the app to always render right-to-left (Hebrew).
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
+
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+
+  // useEffect(() => {
+  //   getHome().then((res) => {
+  //     console.log(res);
+  //   });
+  // }, []);
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }

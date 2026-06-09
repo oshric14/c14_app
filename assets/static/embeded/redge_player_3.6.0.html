@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="robots" content="noindex, nofollow, nosnippet" />
+  </head>
+  <body style="margin: 0px">
+    <div id="player"></div>
+
+    <script
+      src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
+      defer
+    ></script>
+
+    <script
+      src="https://r.il.cdn-redge.media/file/oil/ch14/player/3.5.0/js/redgalaxy-player-3.5.0.min.js"
+      type="module"
+      defer
+    ></script>
+
+    <script
+      src="https://r.il.cdn-redge.media/file/oil/ch14/player/wrapper/wrapper-1.0.0.js"
+      type="module"
+      defer
+    ></script>
+
+    <script type="module">
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoID = urlParams.get("videoID");
+      const isLive = urlParams.get("live");
+      const category = urlParams.get("category");
+      const autoplay = urlParams.get("autoplay");
+      const noAds = urlParams.get("noAds") === "true";
+
+      const dxseg = window.localStorage.getItem(
+        "dmp-publisher-prevDefinitionsIds"
+      );
+
+      const dxu = window.localStorage.getItem("dmp-publisher-dmpid");
+
+      const idxCustomParams = `&cust_params=dxseg%3D${encodeURIComponent(
+        dxseg
+      )}%26dxu%3D${dxu}${
+        category ? `%26category%3D${encodeURIComponent(category)}` : ""
+      }`;
+
+      const setup = {
+        file: {
+          hls: isLive
+            ? "https://r.il.cdn-redge.media/livehls/oil/ch14/live/ch14/live.livx/playlist.m3u8"
+            : `https://channel14.vod.immergo.tv/channel14/transcoded/${videoID}/hls/master.m3u8`,
+        },
+        width: "100vw",
+        height: "100vh",
+        autoplayBlockedRule: "mute",
+        autoplay: autoplay === "true" ? true : false,
+        keyboardEvents: true,
+        playsInline: true,
+        liveDelay: 25,
+        defaultGuiLanguage: "heb",
+        volumeType: "horizontal",
+        seekPrecision: "time",
+        defaultLiveDelay: 15,
+        minBufferTime: 0,
+        maxBufferLength: 20,
+        bufferBehind: 30,
+        ...(isLive && {
+          timeShift: {
+            dvrWindow: "7200", // 2 hours in seconds
+            startFromLive: true, // Start from live edge, not from beginning of DVR window
+          },
+        }),
+        ...(!noAds && {
+          advert:
+            "https://pubads.g.doubleclick.net/gampad/ads?iu=/136431902,22673782353/Now14/MobileWeb/live_video_preroll&description_url=https%3A%2F%2Fwww.now14.co.il%2F&tfcd=0&npa=0&sz=1x1%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=" +
+            Math.floor(Math.random() * 1000) +
+            "&pmad=2&pmnd=1&pmxd=90000&vpos=preroll&" +
+            idxCustomParams,
+          advertLabel: "Advertisement",
+          advertWithCredentials: true,
+          googleIma: true,
+        }),
+      };
+
+      const playerWrapper = new Wrapper();
+      const newSetup = playerWrapper.generateFiles(setup, {
+        addIndexMode: true,
+        addRenditions: true,
+      });
+      const player = new redGalaxy.Player("player").setup(newSetup);
+      player.on("ready", () => {
+        initAccessibilityObserver();
+        // Force player to start from live edge if it's a live stream
+        if (isLive) {
+          try {
+            // Seek to live edge (end of DVR window)
+            const videoElement = document.querySelector("#player video");
+            if (videoElement) {
+              // Wait a bit for the player to fully initialize
+              setTimeout(() => {
+                if (videoElement.seekable && videoElement.seekable.length > 0) {
+                  const liveEdge = videoElement.seekable.end(
+                    videoElement.seekable.length - 1
+                  );
+                  videoElement.currentTime = liveEdge;
+                }
+              }, 500);
+            }
+          } catch (e) {
+            console.warn("Could not seek to live edge:", e);
+          }
+        }
+      });
+
+      function initAccessibilityObserver() {
+        const setAriaIfExists = (selector, label) => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((el) => {
+            if (label && !el.getAttribute("aria-label")) {
+              el.setAttribute("aria-label", label);
+            }
+            if (!el.getAttribute("role")) {
+              el.setAttribute("role", "button");
+            }
+            if (el.children?.length > 0) {
+              [...el.children].forEach((child) => {
+                child.setAttribute("aria-hidden", "true");
+              });
+            }
+          });
+        };
+
+        const hideIframesInPlayer = () => {
+          const containers = document.querySelectorAll(".rgpl-vpaid-container");
+          containers.forEach((container) => {
+            const ads = container.querySelectorAll('[title="Advertisement"]');
+            ads.forEach((ad) => {
+              ad.setAttribute("aria-hidden", "true");
+            });
+          });
+        };
+
+        const setAdvertCounterAria = () => {
+          const counters = document.querySelectorAll(".rgpl-advert-counter");
+          counters.forEach((counter) => {
+            const span = counter.querySelector("span");
+            if (!span) return;
+
+            const spanText = span.innerText.trim(); // "00:05 2/2" or "00:11"
+            const parts = spanText.split(" ");
+
+            const timePart = parts[0];
+            if (!timePart) return;
+            const [mm, ss] = timePart.split(":").map((n) => parseInt(n, 10));
+            if (isNaN(mm) || isNaN(ss)) return;
+            const timeLabel =
+              mm > 0 ? `${mm} דקות ו-${ss} שניות` : `${ss} שניות`;
+
+            let current = null;
+            let total = null;
+            if (parts[1] && parts[1].includes("/")) {
+              const [c, t] = parts[1].split("/");
+              current = parseInt(c, 10);
+              total = parseInt(t, 10);
+              if (isNaN(current) || isNaN(total)) return;
+            }
+
+            let aria = `פרסומת, נותרו ${timeLabel}`;
+            if (current && total) {
+              aria += `, פרסומת ${current} מתוך ${total}`;
+            }
+
+            span.setAttribute("aria-hidden", "true");
+            counter.setAttribute("aria-label", aria);
+          });
+        };
+
+        const ARIA_MAP = [
+          { selector: ".rgpl-btn-play", label: "ניגון והשהיה" },
+          { selector: ".rgpl-btn-pause", label: "ניגון והשהיה" },
+          { selector: ".rgpl-btn-volume", label: "" },
+          { selector: ".rgpl-btn-fullscreen", label: "מסך מלא" },
+          { selector: ".rgpl-btn-jump-forward", label: "דלג קדימה 10 שניות" },
+          { selector: ".rgpl-btn-jump-backward", label: "חזור אחורה 10 שניות" },
+          { selector: ".rgpl-btn-live", label: "שידור חי" },
+          { selector: ".rgpl-btn-settings", label: "הגדרות" },
+        ];
+        ARIA_MAP.forEach((item) => setAriaIfExists(item.selector, item.label));
+
+        const observer = new MutationObserver(() => {
+          ARIA_MAP.forEach((item) =>
+            setAriaIfExists(item.selector, item.label)
+          );
+          hideIframesInPlayer();
+          setAdvertCounterAria();
+        });
+
+        observer.observe(document.getElementById("player"), {
+          childList: true,
+          subtree: true,
+        });
+      }
+    </script>
+  </body>
+</html>

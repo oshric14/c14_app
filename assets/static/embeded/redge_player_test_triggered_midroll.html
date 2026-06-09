@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  </head>
+  <body style="margin: 0px">
+    <div id="player"></div>
+
+    <div
+      id="playAdBtn"
+      style="
+        position: absolute;
+        background-color: blue;
+        cursor: pointer;
+        color: #ffff;
+        top: 0px;
+        left: 0px;
+      "
+    >
+      Click to get AD
+    </div>
+
+    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+
+    <script
+      src="https://r.il.cdn-redge.media/file/oil/ch14/player/3.4.0/js/redgalaxy-player-3.4.0.min.js"
+      type="module"
+    ></script>
+    <script type="module">
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoID = urlParams.get("videoID");
+      const isLive = urlParams.get("live");
+      const category = urlParams.get("category");
+      const autoplay = urlParams.get("autoplay");
+
+      const dxseg = window.localStorage.getItem(
+        "dmp-publisher-prevDefinitionsIds"
+      );
+
+      const dxu = window.localStorage.getItem("dmp-publisher-dmpid");
+
+      const idxCustomParams = `&cust_params=dxseg%3D${encodeURIComponent(
+        dxseg
+      )}%26dxu%3D${dxu}${
+        category ? `%26category%3D${encodeURIComponent(category)}` : ""
+      }`;
+
+      let adsLoader, adsManager, adDisplayContainer, videoElement;
+
+      function initIMA(videoElement, adTagUrl) {
+        adDisplayContainer = new google.ima.AdDisplayContainer(
+          document.querySelector("#player .rgpl-renderers"),
+          videoElement
+        );
+
+        adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+
+        adsLoader.addEventListener(
+          google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+          (e) => {
+            adsManager = e.getAdsManager(videoElement);
+          },
+          false
+        );
+
+        const adsRequest = new google.ima.AdsRequest();
+        adsRequest.adTagUrl = adTagUrl;
+        adsLoader.requestAds(adsRequest);
+      }
+
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          videoElement = document.querySelector("#player video");
+
+          const vastUrl =
+            "https://pubads.g.doubleclick.net/gampad/ads?iu=/136431902,22673782353/Now14/MobileWeb/live_video_preroll&description_url=https%3A%2F%2Fwww.now14.co.il%2F&tfcd=0&npa=0&sz=1x1%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=" +
+            Math.floor(Math.random() * 1000) +
+            "&pmad=2&pmnd=1&pmxd=90000&vpos=midroll&" +
+            idxCustomParams;
+          initIMA(videoElement, vastUrl);
+        }, 2000);
+      });
+
+      document.getElementById("playAdBtn").addEventListener("click", () => {
+        if (adDisplayContainer) adDisplayContainer.initialize();
+        if (adsManager) {
+          videoElement.pause();
+          adsManager.start();
+        }
+      });
+
+      const player = new redGalaxy.Player("player").setup({
+        file: {
+          hls: isLive
+            ? "https://r.il.cdn-redge.media/livehls/oil/ch14/live/ch14/live.livx/playlist.m3u8"
+            : `https://channel14.vod.immergo.tv/channel14/transcoded/${videoID}/hls/master.m3u8`,
+        },
+        width: "100vw",
+        height: "100vh",
+        autoplayBlockedRule: "mute",
+        autoplay: autoplay === "true" ? true : false,
+        keyboardEvents: true,
+        playsInline: true,
+        advertWithCredentials: true,
+        googleIma: true,
+        liveDelay: 25,
+        defaultGuiLanguage: "heb",
+        volumeType: "horizontal",
+        seekPrecision: "time",
+        defaultLiveDelay: 15,
+        minBufferTime: 0,
+        maxBufferLength: 20,
+        bufferBehind: 30,
+      });
+    </script>
+  </body>
+</html>
