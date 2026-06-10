@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MainArticle from "@/components/Article/MainArticle/MainArticle";
-import Mekudamim from "@/components/Article/Mekudamim/Mekudamim";
+import HomeRenderer from "@/components/home/HomeRenderer";
 import BottomNav from "@/components/layout/BottomNav";
 import Header from "@/components/layout/Header";
 import MobileNavShell from "@/components/layout/MobileNavShell";
@@ -12,11 +11,7 @@ import type { HomeType } from "@/types/home";
 type HomeState =
   | { status: "loading" }
   | { status: "error" }
-  | {
-      status: "ready";
-      rashiBlock?: HomeType;
-      mekudamimBlock?: HomeType;
-    };
+  | { status: "ready"; data: HomeType[] };
 
 export default function HomeScreen() {
   const [state, setState] = useState<HomeState>({ status: "loading" });
@@ -25,11 +20,9 @@ export default function HomeScreen() {
     let active = true;
 
     getHome("mobile")
-      .then((blocks: HomeType[]) => {
+      .then((data: HomeType[]) => {
         if (!active) return;
-        const rashiBlock = blocks.find((b) => b.type === "rashi");
-        const mekudamimBlock = blocks.find((b) => b.type === "mekudamim");
-        setState({ status: "ready", rashiBlock, mekudamimBlock });
+        setState({ status: "ready", data });
       })
       .catch(() => {
         if (active) setState({ status: "error" });
@@ -51,18 +44,7 @@ export default function HomeScreen() {
           <ErrorState />
         ) : (
           <AppScrollView bottomNavPadding>
-            {state.rashiBlock?.posts?.length ? (
-              <MainArticle
-                data={state.rashiBlock.posts}
-                timeline={state.rashiBlock.timeline}
-              />
-            ) : null}
-            {state.mekudamimBlock?.posts?.length ? (
-              <Mekudamim
-                data={state.mekudamimBlock.posts}
-                remove_subtitle={state.mekudamimBlock.remove_subtitle}
-              />
-            ) : null}
+            <HomeRenderer data={state.data} />
           </AppScrollView>
         )}
 
