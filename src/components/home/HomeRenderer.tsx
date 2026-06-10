@@ -1,5 +1,6 @@
 import MainArticle from "@/components/Article/MainArticle/MainArticle";
 import Mekudamim from "@/components/Article/Mekudamim/Mekudamim";
+import HomeFeed from "@/components/Home/Feed/HomeFeed";
 import type { HomeType } from "@/types/home";
 
 type HomeRendererProps = {
@@ -12,11 +13,7 @@ function renderHomeBlock(item: HomeType, index: number) {
   switch (item.type) {
     case "rashi":
       return item.posts?.length ? (
-        <MainArticle
-          key={key}
-          data={item.posts}
-          timeline={item.timeline}
-        />
+        <MainArticle key={key} data={item.posts} timeline={item.timeline} />
       ) : null;
 
     case "mekudamim":
@@ -28,6 +25,9 @@ function renderHomeBlock(item: HomeType, index: number) {
         />
       ) : null;
 
+    case "feed":
+      return <HomeFeed key={key} initialData={item.posts} itemsPerPage={5} />;
+
     // These blocks exist on the web homepage, but do not yet have native
     // implementations. Keep the switch explicit so adding each block later is
     // a small, predictable change.
@@ -36,7 +36,6 @@ function renderHomeBlock(item: HomeType, index: number) {
     case "category":
     case "mekudam_categories":
     case "14plus":
-    case "feed":
     case "programs_carousel":
     case "vod":
     case "Mibzakim":

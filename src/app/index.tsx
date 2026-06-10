@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import HomeRenderer from "@/components/home/HomeRenderer";
-import BottomNav from "@/components/layout/BottomNav";
-import Header from "@/components/layout/Header";
-import MobileNavShell from "@/components/layout/MobileNavShell";
+import HomeRenderer from "@/components/Home/HomeRenderer";
+import BottomNav from "@/components/Layout/BottomNav";
+import Header from "@/components/Layout/Header";
+import MobileNavShell from "@/components/Layout/MobileNavShell";
 import { AppScrollView, ErrorState, LoadingState, Screen } from "@/components/ui";
 import { getHome } from "@/services";
 import type { HomeType } from "@/types/home";

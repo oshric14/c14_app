@@ -1,7 +1,7 @@
 import "@/global.css";
 
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import { useFonts } from "expo-font";
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -9,6 +9,7 @@ import { I18nManager, useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { MobileNavProvider } from "@/contexts/MobileNavContext";
+import QueryProvider from "@/providers/QueryProvider";
 
 // Force the app to always render right-to-left (Hebrew).
 I18nManager.allowRTL(true);
@@ -41,10 +42,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <MobileNavProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-          <StatusBar style="light" />
-        </MobileNavProvider>
+        <QueryProvider>
+          <MobileNavProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+            <StatusBar style="light" />
+          </MobileNavProvider>
+        </QueryProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );
