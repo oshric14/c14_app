@@ -1,27 +1,51 @@
 import "@/global.css";
-import { getHome } from "@/services";
 
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { I18nManager, useColorScheme } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { MobileNavProvider } from "@/contexts/MobileNavContext";
 
 // Force the app to always render right-to-left (Hebrew).
 I18nManager.allowRTL(true);
 I18nManager.forceRTL(true);
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
-  // useEffect(() => {
-  //   getHome().then((res) => {
-  //     console.log(res);
-  //   });
-  // }, []);
+  // SimonaPro is the brand font (mirrors the web). Each weight is registered
+  // under its own family so headings can pick the correct cut on Android.
+  const [fontsLoaded, fontError] = useFonts({
+    SimonaPro: require("@/assets/static/fonts/SimonaPro-Regular.ttf"),
+    "SimonaPro-Medium": require("@/assets/static/fonts/SimonaPro-Medium.ttf"),
+    "SimonaPro-Bold": require("@/assets/static/fonts/SimonaPro-Bold.ttf"),
+    "SimonaPro-Black": require("@/assets/static/fonts/SimonaPro-Black.ttf"),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <MobileNavProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+          <StatusBar style="light" />
+        </MobileNavProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

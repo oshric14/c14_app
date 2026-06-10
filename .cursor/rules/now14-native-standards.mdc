@@ -1,0 +1,16 @@
+---
+description: Now14 Expo app conventions and maintainability standards
+alwaysApply: true
+---
+
+# Now14 Native Standards
+
+- Before writing Expo-specific code, read the matching Expo SDK 56 docs at `https://docs.expo.dev/versions/v56.0.0/`.
+- Prefer `src/components/ui/*` primitives over raw `Text`, `Image`, `ScrollView`, or `FlatList` in app code. The primitives own font defaults, placeholders, RTL defaults, and loading/error states.
+- Keep `src/components/ui` generic and app-wide. Put article-specific reusable pieces under `src/components/Article/shared` when needed.
+- When porting from `now14_frontend`, mirror the web folder hierarchy where practical, especially `components/Article/*` (`MainArticle`, `NormalLayout`, `UnusualEventLayout`, `Mekudamim`, item/content/image splits).
+- Adapt web components to React Native intentionally: no `div`, no browser-only APIs, no `dangerouslySetInnerHTML`. Use helpers like `stripHtml()` for API HTML strings.
+- Preserve RTL explicitly where visual order matters. Use `row-reverse` / `textAlign: "right"` rather than relying only on `I18nManager.forceRTL`.
+- Reuse data contracts from `src/types/*`; do not create duplicate article/home/nav models unless the API contract really changes.
+- Keep `src/app/*` screens thin: fetch/compose there, move repeated UI into `components`, and repeated data logic into hooks.
+- After structural changes, check diagnostics and run `npx tsc --noEmit`.
