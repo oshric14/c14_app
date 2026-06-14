@@ -1,7 +1,8 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { AppImage, AppText } from "@/components/ui";
 import type { ArticleType } from "@/types/article";
+import { openArticle } from "@/utils/articleNavigation";
 
 import BigArticleContent from "./BigArticleContent";
 
@@ -17,7 +18,7 @@ function BigArticle({ data, categoryName }: BigArticleProps) {
       className="w-full"
       style={{ backgroundColor: data.shivuki_text ? "#EDF3F5" : "#FFFFFF" }}
     >
-      <View className="relative w-full">
+      <Pressable className="relative w-full" onPress={() => openArticle(data)}>
         <AppImage
           source={data.img}
           style={{ width: "100%", aspectRatio: 16 / 9 }}
@@ -36,9 +37,11 @@ function BigArticle({ data, categoryName }: BigArticleProps) {
             </AppText>
           </View>
         ) : null}
-      </View>
+      </Pressable>
 
-      <BigArticleContent data={data} />
+      <Pressable onPress={() => openArticle(data)}>
+        <BigArticleContent data={data} />
+      </Pressable>
     </View>
   );
 }

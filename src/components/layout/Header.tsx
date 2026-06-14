@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -41,15 +42,22 @@ export default function Header({ onMenuPress }: HeaderProps) {
 
         {/* Centered logo */}
         <View
-          pointerEvents="none"
+          pointerEvents="box-none"
           className="absolute bottom-0 left-0 right-0 top-0 items-center justify-center"
         >
-          <AppImage
-            source={logo}
-            style={{ width: 50, height: 35 }}
-            contentFit="contain"
-            withPlaceholder={false}
-          />
+          <Pressable
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="מעבר לדף הבית"
+            onPress={() => router.push("/")}
+          >
+            <AppImage
+              source={logo}
+              style={{ width: 50, height: 35 }}
+              contentFit="contain"
+              withPlaceholder={false}
+            />
+          </Pressable>
         </View>
 
         {/* Plus indicator — end side (left in RTL) */}

@@ -3,6 +3,7 @@ import type { ArticleType } from "@/types/article";
 import type { HomeType } from "@/types/home";
 import type { ShidurimResData } from "@/types/shidurim";
 import type { TerrorEvent, TerrorEventsNumbers } from "@/types/special";
+import { appendClientOrigin } from "@/utils/requestOrigin";
 
 import { httpRequestService } from "./httpRequest.service";
 
@@ -16,21 +17,28 @@ function buildQuery(params: ArticleQuery): string {
   return search.toString();
 }
 
+function buildArticleQuery(params: ArticleQuery = {}) {
+  const search = new URLSearchParams(buildQuery(params));
+  appendClientOrigin(search);
+  return search.toString();
+}
+
 export const getHome = (viewport?: string) =>
   httpRequestService.get<HomeType[]>(
     `homepage_new${viewport ? `?viewport=${viewport}` : ""}`,
   );
 
 export const getArticles = (query: ArticleQuery = {}) =>
-  httpRequestService.get<ArticleType[]>(`articles/?${buildQuery(query)}`);
+  httpRequestService.get<ArticleType[]>(`articles/?${buildArticleQuery(query)}`);
 
 export const getArticleById = (id: number) =>
-  httpRequestService.get<ArticleType>(`articles/?id=${id}`);
+  httpRequestService.get<ArticleType>(`articles/?${buildArticleQuery({ id })}`);
 
-export const searchArticles = (search: string) =>
-  httpRequestService.get<ArticleType[]>(
-    `articles/?query=${encodeURIComponent(search)}`,
-  );
+export const searchArticles = (query: string) => {
+  const search = new URLSearchParams({ query });
+  appendClientOrigin(search);
+  return httpRequestService.get<ArticleType[]>(`articles/?${search.toString()}`);
+};
 
 export const getArchive = <T = unknown>(id: number) =>
   httpRequestService.get<T>(`archive/${id}`);

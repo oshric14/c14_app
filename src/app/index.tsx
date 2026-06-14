@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import HomeRenderer from "@/components/Home/HomeRenderer";
 import BottomNav from "@/components/Layout/BottomNav";
@@ -15,6 +15,15 @@ type HomeState =
 
 export default function HomeScreen() {
   const [state, setState] = useState<HomeState>({ status: "loading" });
+
+  const loadHome = useCallback(async () => {
+    try {
+      const data = await getHome("mobile");
+      setState({ status: "ready", data });
+    } catch {
+      setState({ status: "error" });
+    }
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -38,15 +47,15 @@ export default function HomeScreen() {
       <Screen>
         <Header />
 
-        {state.status === "loading" ? (
-          <LoadingState />
-        ) : state.status === "error" ? (
-          <ErrorState />
-        ) : (
-          <AppScrollView bottomNavPadding>
+        <AppScrollView bottomNavPadding onRefresh={loadHome}>
+          {state.status === "loading" ? (
+            <LoadingState />
+          ) : state.status === "error" ? (
+            <ErrorState />
+          ) : (
             <HomeRenderer data={state.data} />
-          </AppScrollView>
-        )}
+          )}
+        </AppScrollView>
 
         <BottomNav />
       </Screen>

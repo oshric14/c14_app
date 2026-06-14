@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { I18nManager, useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { LayoutProvider } from "@/contexts/LayoutContext";
 import { MobileNavProvider } from "@/contexts/MobileNavContext";
 import QueryProvider from "@/providers/QueryProvider";
 
@@ -43,10 +44,12 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <QueryProvider>
-          <MobileNavProvider>
-            <Stack screenOptions={{ headerShown: false }} />
-            <StatusBar style="light" />
-          </MobileNavProvider>
+          <LayoutProvider>
+            <MobileNavProvider>
+              <Stack screenOptions={{ headerShown: false }} />
+              <StatusBar style="light" />
+            </MobileNavProvider>
+          </LayoutProvider>
         </QueryProvider>
       </ThemeProvider>
     </SafeAreaProvider>

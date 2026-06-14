@@ -12,4 +12,5 @@ export type ArticleQuery = {
   dateFrom?: string;
   dateTo?: string;
   paged?: number;
+  origin?: string;
 };

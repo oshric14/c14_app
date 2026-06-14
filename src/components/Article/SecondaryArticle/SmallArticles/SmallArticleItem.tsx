@@ -1,6 +1,7 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import type { ArticleType } from "@/types/article";
+import { openArticle } from "@/utils/articleNavigation";
 
 import SmallArticleItemContent from "./SmallArticleItemContent";
 import SmallArticleItemImage from "./SmallArticleItemImage";
@@ -16,7 +17,8 @@ function SmallArticleItem({ data, isLastItem }: SmallArticleItemProps) {
       className="w-full"
       style={{ backgroundColor: data.shivuki_text ? "#EDF3F5" : "#FFFFFF" }}
     >
-      <View
+      <Pressable
+        onPress={() => openArticle(data)}
         className="items-center gap-x-[10px]"
         style={{ flexDirection: "row-reverse" }}
       >
@@ -27,7 +29,7 @@ function SmallArticleItem({ data, isLastItem }: SmallArticleItemProps) {
           alt={data.seo?.title}
         />
         <SmallArticleItemContent data={data} />
-      </View>
+      </Pressable>
 
       {!isLastItem ? (
         <View className="my-[10px] h-[1px] w-full bg-[#9D9D9D]/25" />

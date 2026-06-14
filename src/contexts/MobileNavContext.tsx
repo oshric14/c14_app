@@ -3,7 +3,6 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
   useState,
   type PropsWithChildren,
 } from "react";
@@ -31,7 +30,7 @@ const USE_NATIVE_DRIVER = Platform.OS !== "web";
 export function MobileNavProvider({ children }: PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const progress = useRef(new Animated.Value(0)).current;
+  const [progress] = useState(() => new Animated.Value(0));
   const nav = useNavItems("now14-header");
 
   const openNav = useCallback(() => {

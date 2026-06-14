@@ -1,8 +1,9 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { AppImage, AppText } from "@/components/ui";
 import type { ArticleType } from "@/types/article";
 import type { TimelineType } from "@/types/Timeline";
+import { openArticle } from "@/utils/articleNavigation";
 import { stripHtml } from "@/utils/html";
 
 import BigArticleContent from "./BigArticleContent";
@@ -17,7 +18,7 @@ function BigArticle({ data }: BigArticleProps) {
   const roofTitle = stripHtml(data.roofTitle);
 
   return (
-    <View className="w-full bg-[#000917]">
+    <Pressable className="w-full bg-[#000917]" onPress={() => openArticle(data)}>
       <View className="relative w-full">
         <AppImage
           source={img}
@@ -42,7 +43,7 @@ function BigArticle({ data }: BigArticleProps) {
       </View>
 
       <BigArticleContent data={data} />
-    </View>
+    </Pressable>
   );
 }
 

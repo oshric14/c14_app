@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Animated, View } from "react-native";
 
 type SkeletonBlockProps = {
@@ -38,7 +38,7 @@ function SmallArticleSkeleton({ isLast }: { isLast?: boolean }) {
 }
 
 function SecondaryArticleSkeleton() {
-  const opacity = useRef(new Animated.Value(0.55)).current;
+  const [opacity] = useState(() => new Animated.Value(0.55));
 
   useEffect(() => {
     const animation = Animated.loop(

@@ -44,3 +44,61 @@ export function stripHtml(value?: string | null): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+export type ArticleContentBlock =
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "image"; src: string; alt?: string };
+
+function getAttribute(tag: string, name: string) {
+  const match = tag.match(new RegExp(`${name}=["']([^"']+)["']`, "i"));
+  return match?.[1] ? decodeEntities(match[1]) : undefined;
+}
+
+export function parseArticleContent(value?: string | null): ArticleContentBlock[] {
+  if (!value) return [];
+
+  const blocks: ArticleContentBlock[] = [];
+  const source = String(value)
+    .replace(/\r?\n/g, " ")
+    .replace(/<br\s*\/?>/gi, "\n");
+
+  const blockRegex =
+    /<(h[1-6]|p|blockquote)(?:\s[^>]*)?>([\s\S]*?)<\/\1>|<img\b[^>]*>/gi;
+
+  for (const match of source.matchAll(blockRegex)) {
+    const fullMatch = match[0];
+    const tagName = match[1]?.toLowerCase();
+
+    if (fullMatch.toLowerCase().startsWith("<img")) {
+      const src = getAttribute(fullMatch, "src");
+      if (src) {
+        blocks.push({
+          type: "image",
+          src,
+          alt: getAttribute(fullMatch, "alt"),
+        });
+      }
+      continue;
+    }
+
+    const text = stripHtml(match[2]).replace(/\n+/g, "\n").trim();
+    if (!text) continue;
+
+    if (tagName?.startsWith("h")) {
+      blocks.push({ type: "heading", text });
+    } else if (tagName === "blockquote") {
+      blocks.push({ type: "quote", text });
+    } else {
+      blocks.push({ type: "paragraph", text });
+    }
+  }
+
+  if (!blocks.length) {
+    const fallback = stripHtml(value);
+    return fallback ? [{ type: "paragraph", text: fallback }] : [];
+  }
+
+  return blocks;
+}

@@ -1,6 +1,7 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import type { ArticleType } from "@/types/article";
+import { openArticle } from "@/utils/articleNavigation";
 
 import MekudamItemContent from "./MekudamItemContent";
 import MekudamItemImage from "./MekudamItemImage";
@@ -18,7 +19,8 @@ function MekudamItem({
 }: MekudamItemProps) {
   return (
     <View>
-      <View
+      <Pressable
+        onPress={() => openArticle(data)}
         className="items-center gap-x-[10px] px-[10px]"
         style={{ flexDirection: "row-reverse" }}
       >
@@ -32,7 +34,7 @@ function MekudamItem({
           data={data}
           remove_subtitle={remove_subtitle}
         />
-      </View>
+      </Pressable>
 
       {!isLastItem ? (
         <View className="my-[10px] h-[1px] w-full bg-[#9D9D9D]/25" />

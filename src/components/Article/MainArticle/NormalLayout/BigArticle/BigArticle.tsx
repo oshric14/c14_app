@@ -1,8 +1,9 @@
-import { View } from "react-native";
+import { Pressable } from "react-native";
 
 import { AppImage } from "@/components/ui";
 import type { ArticleType } from "@/types/article";
 import type { TimelineType } from "@/types/Timeline";
+import { openArticle } from "@/utils/articleNavigation";
 
 import BigArticleContent from "./BigArticleContent";
 
@@ -15,7 +16,7 @@ function BigArticle({ data }: BigArticleProps) {
   const img = Array.isArray(data.img) ? data.img[0] : data.img;
 
   return (
-    <View className="w-full">
+    <Pressable className="w-full" onPress={() => openArticle(data)}>
       <AppImage
         source={img}
         style={{ width: "100%", aspectRatio: 16 / 9 }}
@@ -24,7 +25,7 @@ function BigArticle({ data }: BigArticleProps) {
       />
 
       <BigArticleContent data={data} />
-    </View>
+    </Pressable>
   );
 }
 
