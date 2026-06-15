@@ -31,10 +31,9 @@ function ArticleHeader() {
       ) : null}
 
       <View
-        className="mt-[16px] items-center justify-between border-b border-[#E5E7EB] pb-[14px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="mt-[16px] flex-row-reverse items-center justify-between border-b border-[#E5E7EB] pb-[14px]"
       >
-        <View className="items-center gap-x-[8px]" style={{ flexDirection: "row-reverse" }}>
+        <View className="flex-row-reverse items-center gap-x-[8px]">
           {article.author?.img ? (
             <AppImage
               source={article.author.img}

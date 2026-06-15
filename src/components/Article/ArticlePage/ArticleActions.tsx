@@ -36,8 +36,7 @@ function ArticleActions() {
   return (
     <View className="px-[18px] pb-[20px]">
       <View
-        className="items-center gap-x-[8px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="flex-row-reverse items-center gap-x-[8px]"
       >
         <ActionButton label="שיתוף" onPress={shareArticle} />
         <ActionButton label="תגובות" value={article.commentsNumber || undefined} />

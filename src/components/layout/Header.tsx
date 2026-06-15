@@ -26,8 +26,7 @@ export default function Header({ onMenuPress }: HeaderProps) {
       className="z-50 bg-[#d21d23] shadow-md"
     >
       <View
-        className="h-[40px] w-full items-center justify-between px-[15px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="h-[40px] w-full flex-row-reverse items-center justify-between px-[15px]"
       >
         {/* Hamburger — start side (right in RTL) */}
         <Pressable

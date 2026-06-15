@@ -47,8 +47,7 @@ function MekudamItemContent({
       ) : null}
 
       <View
-        className="mt-[2px] items-center gap-x-[5px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="mt-[2px] flex-row-reverse items-center gap-x-[5px]"
       >
         {shivukiText ? (
           <AppText variant="meta" className="text-black/60">

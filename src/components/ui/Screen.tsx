@@ -9,12 +9,17 @@ function Screen({
   safeArea = false,
   className,
   children,
+  style,
   ...props
 }: ScreenProps) {
   const Component = safeArea ? SafeAreaView : View;
 
   return (
-    <Component className={`flex-1 bg-white ${className ?? ""}`} {...props}>
+    <Component
+      className={`flex-1 bg-white ${className ?? ""}`}
+      style={style}
+      {...props}
+    >
       {children}
     </Component>
   );

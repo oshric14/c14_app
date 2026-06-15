@@ -37,12 +37,7 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    },
-    "extra": {
-      "supportsRTL": true,
-      "forcesRTL": true
+      "typedRoutes": true
     }
   }
 }

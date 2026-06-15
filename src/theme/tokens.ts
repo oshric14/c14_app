@@ -85,7 +85,6 @@ export const radius = {
 
 export const layout = {
   maxContentWidth: 1350, // matches the web `app` max-width
-  direction: "rtl" as const, // app is Hebrew / RTL
 } as const;
 
 /** Navy gradient stops (web `NowBlueGradient`, 180deg). */

@@ -7,6 +7,13 @@ import MobileNav from "./MobileNav";
 
 const { width: WINDOW_WIDTH } = Dimensions.get("window");
 const PREVIEW_TRANSLATE_X = -WINDOW_WIDTH * 0.3;
+const absoluteFill = {
+  position: "absolute" as const,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+};
 
 const webPreviewBlur =
   Platform.OS === "web"
@@ -91,7 +98,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   backdrop: {
-    ...StyleSheet.absoluteFill,
+    ...absoluteFill,
     backgroundColor: "#000000",
   },
   pagePreview: {

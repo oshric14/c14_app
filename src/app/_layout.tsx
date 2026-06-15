@@ -1,20 +1,17 @@
 import "@/global.css";
 
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { I18nManager, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { LayoutProvider } from "@/contexts/LayoutContext";
 import { MobileNavProvider } from "@/contexts/MobileNavContext";
 import QueryProvider from "@/providers/QueryProvider";
-
-// Force the app to always render right-to-left (Hebrew).
-I18nManager.allowRTL(true);
-I18nManager.forceRTL(true);
 
 SplashScreen.preventAutoHideAsync();
 

@@ -7,12 +7,9 @@ import {
 } from "react";
 import { useColorScheme, type ColorSchemeName } from "react-native";
 
-import { layout } from "@/theme/tokens";
-
 type LayoutContextValue = {
   colorScheme: ColorSchemeName;
   isDarkMode: boolean;
-  direction: typeof layout.direction;
   headerHeight: number;
   bottomNavHeight: number;
   setHeaderHeight: (height: number) => void;
@@ -30,7 +27,6 @@ function LayoutProvider({ children }: PropsWithChildren) {
     () => ({
       colorScheme,
       isDarkMode: colorScheme === "dark",
-      direction: layout.direction,
       headerHeight,
       bottomNavHeight,
       setHeaderHeight,

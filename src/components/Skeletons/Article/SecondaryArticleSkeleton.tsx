@@ -19,8 +19,7 @@ function SmallArticleSkeleton({ isLast }: { isLast?: boolean }) {
   return (
     <View className="w-full">
       <View
-        className="items-center gap-x-[10px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="flex-row-reverse items-center gap-x-[10px]"
       >
         <SkeletonBlock
           className="w-[40%] shrink-0"

@@ -15,7 +15,7 @@ function RelatedArticleItem({ item }: { item: ArticleType }) {
       onPress={() => openArticle(item)}
       className="border-b border-[#E5E7EB] py-[12px]"
     >
-      <View className="items-center gap-x-[10px]" style={{ flexDirection: "row-reverse" }}>
+      <View className="flex-row-reverse items-center gap-x-[10px]">
         <AppImage
           source={item.img}
           style={{ width: 112, height: 76, borderRadius: 8 }}

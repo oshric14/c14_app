@@ -74,8 +74,7 @@ function BigArticleContent({ data }: BigArticleContentProps) {
       ) : null}
 
       <View
-        className="mt-[10px] items-center gap-x-[7px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="mt-[10px] flex-row-reverse items-center gap-x-[7px]"
       >
         <CommentsBadge number={data.commentsNumber ?? 0} />
         {shivukiText ? (

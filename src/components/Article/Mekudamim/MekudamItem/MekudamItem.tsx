@@ -21,8 +21,7 @@ function MekudamItem({
     <View>
       <Pressable
         onPress={() => openArticle(data)}
-        className="items-center gap-x-[10px] px-[10px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="flex-row-reverse items-center gap-x-[10px] px-[10px]"
       >
         <MekudamItemImage
           img={data.img}
@@ -30,10 +29,7 @@ function MekudamItem({
           videoDuration={data.videoDuration}
           alt={data.seo?.title}
         />
-        <MekudamItemContent
-          data={data}
-          remove_subtitle={remove_subtitle}
-        />
+        <MekudamItemContent data={data} remove_subtitle={remove_subtitle} />
       </Pressable>
 
       {!isLastItem ? (

@@ -45,8 +45,7 @@ function SmallArticleItemContent({ data }: SmallArticleItemContentProps) {
       </AppText>
 
       <View
-        className="mt-[2px] min-h-[24px] items-center gap-x-[5px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="mt-[2px] min-h-[24px] flex-row-reverse items-center gap-x-[5px]"
       >
         <CommentsBadge number={data.commentsNumber ?? 0} />
         {shivukiText ? (

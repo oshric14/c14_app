@@ -17,7 +17,7 @@ function ArticleTags() {
         תגיות
       </AppText>
 
-      <View className="flex-wrap gap-[8px]" style={{ flexDirection: "row-reverse" }}>
+      <View className="flex-row-reverse flex-wrap gap-[8px]">
         {tags.map((tag) => (
           <Pressable
             key={`${tag.name}-${tag.url}`}

@@ -50,7 +50,7 @@ export default function BottomNav() {
       }}
       className="absolute bottom-0 left-0 right-0 rounded-t-[12px] bg-white"
     >
-      <View className="h-[58px] w-full flex-row items-center">
+      <View className="h-[58px] w-full flex-row-reverse items-center">
         <Tab icon={icons.home} label="בית" />
         <Tab icon={icons.madorim} label="מדורים" />
 

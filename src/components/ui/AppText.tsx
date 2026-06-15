@@ -52,7 +52,10 @@ function AppText({
   return (
     <Text
       className={`${variantClassName[variant]} ${className ?? ""}`}
-      style={[{ fontFamily: family, textAlign: align }, style]}
+      style={[
+        { fontFamily: family, textAlign: align, writingDirection: "rtl" },
+        style,
+      ]}
       {...props}
     />
   );

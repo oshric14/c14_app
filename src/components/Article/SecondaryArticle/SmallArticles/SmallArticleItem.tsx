@@ -19,8 +19,7 @@ function SmallArticleItem({ data, isLastItem }: SmallArticleItemProps) {
     >
       <Pressable
         onPress={() => openArticle(data)}
-        className="items-center gap-x-[10px]"
-        style={{ flexDirection: "row-reverse" }}
+        className="flex-row-reverse items-center gap-x-[10px]"
       >
         <SmallArticleItemImage
           img={data.img}
