@@ -10,5 +10,8 @@ export { default as ErrorState } from "./ErrorState";
 export type { ErrorStateProps } from "./ErrorState";
 export { default as LoadingState } from "./LoadingState";
 export type { LoadingStateProps } from "./LoadingState";
+export { default as OfflineBanner } from "./OfflineBanner";
 export { default as Screen } from "./Screen";
 export type { ScreenProps } from "./Screen";
+export { default as SectionHeader } from "./SectionHeader";
+export type { SectionHeaderProps } from "./SectionHeader";

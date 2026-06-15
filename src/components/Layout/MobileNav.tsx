@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppScrollView, AppText } from "@/components/ui";
 import type { navItem } from "@/types/nav";
+import { openArchive } from "@/utils/articleNavigation";
 
 type MobileNavProps = {
   onClose: () => void;
@@ -41,6 +42,37 @@ function resolveNavUrl(link?: string) {
 function openNavLink(link: string, onClose: () => void) {
   const url = resolveNavUrl(link);
   onClose();
+  if (url) {
+    Linking.openURL(url).catch(() => {});
+  }
+}
+
+/** Resolve the in-app archive id for a nav item, if it maps to a category. */
+function archiveIdForItem(item: navItem): number | undefined {
+  const fromLink = Number(item.link?.match(/\/archive\/(\d+)/)?.[1]);
+  if (Number.isFinite(fromLink)) return fromLink;
+
+  if (item.type === "category" || item.type === "archive") {
+    return Number.isFinite(item.object_id) ? item.object_id : undefined;
+  }
+
+  return undefined;
+}
+
+/**
+ * Category/archive items navigate inside the app; everything else (radio,
+ * search, external sites) still opens in the browser.
+ */
+function handleNavItem(item: navItem, onClose: () => void) {
+  const archiveId = archiveIdForItem(item);
+  onClose();
+
+  if (archiveId !== undefined) {
+    openArchive(archiveId);
+    return;
+  }
+
+  const url = resolveNavUrl(item.link);
   if (url) {
     Linking.openURL(url).catch(() => {});
   }
@@ -90,7 +122,7 @@ function AnimatedNavItem({
     <Animated.View style={{ opacity, transform: [{ translateY }] }}>
       <Pressable
         hitSlop={8}
-        onPress={() => openNavLink(item.link, onClose)}
+        onPress={() => handleNavItem(item, onClose)}
         className="py-[5px]"
       >
         <AppText
@@ -203,7 +235,7 @@ export default function MobileNav({
                   {quickItems.map((item) => (
                     <Pressable
                       key={`${item.object_id}-${item.title}`}
-                      onPress={() => openNavLink(item.link, onClose)}
+                      onPress={() => handleNavItem(item, onClose)}
                       className="h-[36px] items-center justify-center rounded-[18px] bg-white"
                     >
                       <AppText

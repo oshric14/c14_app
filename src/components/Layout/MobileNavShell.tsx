@@ -2,7 +2,6 @@ import { Animated, Dimensions, Platform, StyleSheet, View } from "react-native";
 import type { PropsWithChildren } from "react";
 
 import { useMobileNav } from "@/contexts/MobileNavContext";
-
 import MobileNav from "./MobileNav";
 
 const { width: WINDOW_WIDTH } = Dimensions.get("window");

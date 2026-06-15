@@ -1,5 +1,6 @@
 import { View } from "react-native";
 
+import Breadcrumbs from "@/components/Article/shared/Breadcrumbs";
 import { AppImage, AppText } from "@/components/ui";
 import { useArticleContext } from "@/contexts/ArticleContext";
 import { stripHtml } from "@/utils/html";
@@ -14,6 +15,12 @@ function ArticleHeader() {
 
   return (
     <View className="px-[18px] pb-[18px] pt-[14px]">
+      {article.breadcrumbs?.length ? (
+        <View className="mb-[10px]">
+          <Breadcrumbs items={article.breadcrumbs} />
+        </View>
+      ) : null}
+
       {roofTitle ? (
         <AppText variant="roofTitle" weight="bold" className="mb-[8px]">
           {roofTitle}
