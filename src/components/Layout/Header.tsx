@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppImage, AppText } from "@/components/ui";
 import { useMobileNav } from "@/contexts/MobileNavContext";
+import { tokens } from "@/theme/tokens";
 
 const logo = require("@/assets/static/icons/logo-c14.svg");
 
@@ -22,8 +23,11 @@ export default function Header({ onMenuPress }: HeaderProps) {
 
   return (
     <View
-      style={{ paddingTop: insets.top }}
-      className="z-50 bg-[#d21d23] shadow-md"
+      style={{
+        paddingTop: insets.top,
+        backgroundColor: tokens.colors.brand.red,
+      }}
+      className="z-50 shadow-md"
     >
       <View
         className="h-[40px] w-full flex-row-reverse items-center justify-between px-[15px]"

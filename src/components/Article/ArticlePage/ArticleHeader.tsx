@@ -1,37 +1,34 @@
 import { View } from "react-native";
 
+import CommentsBadge from "@/components/Article/shared/CommentsBadge";
 import { AppImage, AppText } from "@/components/ui";
 import { useArticleContext } from "@/contexts/ArticleContext";
+import { tokens } from "@/theme/tokens";
 import { stripHtml } from "@/utils/html";
 
 function ArticleHeader() {
   const { article, subTitle, title } = useArticleContext();
   const roofTitle = stripHtml(article.roofTitle);
-  const authorName = article.publishMeta?.author || article.author?.name;
-  const publishDate = [article.publishMeta?.date, article.publishMeta?.time]
+  const authorName = article.author?.name || article.publishMeta?.author;
+  const fallbackPublishDate = [article.publishMeta?.date, article.publishMeta?.time]
     .filter(Boolean)
     .join(" | ");
+  const publishDate = article.timeInWords || fallbackPublishDate;
 
   return (
-    <View className="px-[18px] pb-[18px] pt-[14px]">
+    <View className="px-[18px] pb-[18px] pt-[10px]">
       {roofTitle ? (
         <AppText variant="roofTitle" weight="bold" className="mb-[8px]">
           {roofTitle}
         </AppText>
       ) : null}
 
-      <AppText variant="headline" className="text-[31px] leading-[36px] text-[#111827]">
+      <AppText variant="headline" className="text-[33px] leading-[38px] text-brand-blue">
         {title}
       </AppText>
 
-      {subTitle ? (
-        <AppText variant="subtitle" className="mt-[12px] text-[18px] leading-[26px] text-[#374151]">
-          {subTitle}
-        </AppText>
-      ) : null}
-
       <View
-        className="mt-[16px] flex-row-reverse items-center justify-between border-b border-[#E5E7EB] pb-[14px]"
+        className="mt-[14px] min-h-[55px] flex-row-reverse items-center justify-between border-y border-[#E5E7EB] py-[9px]"
       >
         <View className="flex-row-reverse items-center gap-x-[8px]">
           {article.author?.img ? (
@@ -44,24 +41,30 @@ function ArticleHeader() {
 
           <View>
             {authorName ? (
-              <AppText variant="meta" weight="bold" className="text-[14px] text-[#111827]">
+              <AppText variant="meta" weight="bold" className="text-[14px] text-brand-blue">
                 {authorName}
               </AppText>
             ) : null}
             {publishDate ? (
-              <AppText variant="meta" className="mt-[2px] text-[12px] text-[#6B7280]">
+              <AppText variant="meta" className="mt-[2px] text-[12px] text-[#60646C]">
                 {publishDate}
               </AppText>
             ) : null}
           </View>
         </View>
 
-        {article.commentsNumber ? (
-          <AppText variant="meta" className="text-[13px] text-[#6B7280]">
-            {article.commentsNumber} תגובות
-          </AppText>
-        ) : null}
+        <CommentsBadge number={article.commentsNumber} bold />
       </View>
+
+      {subTitle ? (
+        <AppText
+          variant="subtitle"
+          className="mt-[13px] text-[22px] leading-[29px]"
+          style={{ color: tokens.colors.text.secondary }}
+        >
+          {subTitle}
+        </AppText>
+      ) : null}
     </View>
   );
 }

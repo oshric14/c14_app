@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import type { ArticleType } from "@/types/article";
 import type { TimelineType } from "@/types/Timeline";
 
@@ -23,4 +25,4 @@ function MainArticle({ data, timeline }: MainArticleProps) {
   return <NormalLayout data={data} timeline={timeline} />;
 }
 
-export default MainArticle;
+export default memo(MainArticle);

@@ -1,5 +1,6 @@
 import { View } from "react-native";
 
+import CommentsBadge from "@/components/Article/shared/CommentsBadge";
 import { AppText } from "@/components/ui";
 import type { ArticleType } from "@/types/article";
 import { stripHtml } from "@/utils/html";
@@ -55,6 +56,7 @@ function MekudamItemContent({
           </AppText>
         ) : (
           <>
+            <CommentsBadge number={data.commentsNumber} bold minNumber={3} />
             {time ? (
               <AppText variant="meta">
                 {time}

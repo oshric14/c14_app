@@ -1,5 +1,7 @@
 import { ActivityIndicator, View } from "react-native";
 
+import { tokens } from "@/theme/tokens";
+
 import AppText from "./AppText";
 
 type LoadingStateProps = {
@@ -9,7 +11,7 @@ type LoadingStateProps = {
 function LoadingState({ message }: LoadingStateProps) {
   return (
     <View className="flex-1 items-center justify-center gap-y-[10px]">
-      <ActivityIndicator size="large" color="#E01F26" />
+      <ActivityIndicator size="large" color={tokens.colors.brand.red} />
       {message ? <AppText variant="meta">{message}</AppText> : null}
     </View>
   );

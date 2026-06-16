@@ -11,7 +11,8 @@ function QueryProvider({ children }: PropsWithChildren) {
         defaultOptions: {
           queries: {
             staleTime: 30_000,
-            retry: 1,
+            gcTime: 10 * 60_000,
+            retry: (failureCount) => failureCount < 2,
             refetchOnWindowFocus: false,
           },
         },

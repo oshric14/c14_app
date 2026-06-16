@@ -49,6 +49,7 @@ export type ArticleContentBlock =
   | { type: "heading"; text: string }
   | { type: "paragraph"; text: string }
   | { type: "quote"; text: string }
+  | { type: "listItem"; text: string; ordered?: boolean }
   | { type: "image"; src: string; alt?: string };
 
 function getAttribute(tag: string, name: string) {
@@ -65,7 +66,7 @@ export function parseArticleContent(value?: string | null): ArticleContentBlock[
     .replace(/<br\s*\/?>/gi, "\n");
 
   const blockRegex =
-    /<(h[1-6]|p|blockquote)(?:\s[^>]*)?>([\s\S]*?)<\/\1>|<img\b[^>]*>/gi;
+    /<(h[1-6]|p|blockquote|ul|ol)(?:\s[^>]*)?>([\s\S]*?)<\/\1>|<img\b[^>]*>/gi;
 
   for (const match of source.matchAll(blockRegex)) {
     const fullMatch = match[0];
@@ -86,7 +87,16 @@ export function parseArticleContent(value?: string | null): ArticleContentBlock[
     const text = stripHtml(match[2]).replace(/\n+/g, "\n").trim();
     if (!text) continue;
 
-    if (tagName?.startsWith("h")) {
+    if (tagName === "ul" || tagName === "ol") {
+      const ordered = tagName === "ol";
+      const listItems = [...match[2].matchAll(/<li(?:\s[^>]*)?>([\s\S]*?)<\/li>/gi)];
+      listItems.forEach((listItem) => {
+        const itemText = stripHtml(listItem[1]).trim();
+        if (itemText) {
+          blocks.push({ type: "listItem", text: itemText, ordered });
+        }
+      });
+    } else if (tagName?.startsWith("h")) {
       blocks.push({ type: "heading", text });
     } else if (tagName === "blockquote") {
       blocks.push({ type: "quote", text });

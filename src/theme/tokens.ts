@@ -22,6 +22,7 @@ export const colors = {
   },
   text: {
     primary: "#141533",
+    secondary: "#626262",
     onDark: "#FFFFFF",
     muted: "#60646C",
   },

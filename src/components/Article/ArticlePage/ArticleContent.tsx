@@ -57,6 +57,25 @@ function ArticleContent() {
           );
         }
 
+        if (block.type === "listItem") {
+          return (
+            <View
+              key={`article-content-list-item-${index}`}
+              className="mb-[10px] flex-row-reverse gap-x-[10px]"
+            >
+              <AppText variant="body" className="text-[18px] leading-[30px] text-brand-red">
+                {block.ordered ? `${index + 1}.` : "•"}
+              </AppText>
+              <AppText
+                variant="body"
+                className="min-w-0 flex-1 text-[18px] leading-[30px] text-[#111827]"
+              >
+                {block.text}
+              </AppText>
+            </View>
+          );
+        }
+
         return (
           <AppText
             key={`article-content-paragraph-${index}`}

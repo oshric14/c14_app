@@ -2,7 +2,7 @@ import { Pressable, View } from "react-native";
 
 import { AppImage, AppText } from "@/components/ui";
 import type { ArticleType } from "@/types/article";
-import { openArticle } from "@/utils/articleNavigation";
+import { openArchive, openArticle } from "@/utils/articleNavigation";
 
 import BigArticleContent from "./BigArticleContent";
 
@@ -12,7 +12,7 @@ type BigArticleProps = {
   categoryId?: number;
 };
 
-function BigArticle({ data, categoryName }: BigArticleProps) {
+function BigArticle({ data, categoryId, categoryName }: BigArticleProps) {
   return (
     <View
       className="w-full"
@@ -27,7 +27,13 @@ function BigArticle({ data, categoryName }: BigArticleProps) {
         />
 
         {categoryName ? (
-          <View className="absolute right-[20px] top-[20px] rounded-[4px] bg-[#E01F26] px-[8px] py-[4px]">
+          <Pressable
+            className="absolute right-[20px] top-[20px] rounded-[4px] bg-brand-red px-[8px] py-[4px]"
+            onPress={(event) => {
+              event.stopPropagation();
+              openArchive(categoryId);
+            }}
+          >
             <AppText
               variant="meta"
               weight="bold"
@@ -35,7 +41,7 @@ function BigArticle({ data, categoryName }: BigArticleProps) {
             >
               {categoryName}
             </AppText>
-          </View>
+          </Pressable>
         ) : null}
       </Pressable>
 

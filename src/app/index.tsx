@@ -1,61 +1,76 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo } from "react";
+import type { ListRenderItem } from "react-native";
 
 import HomeRenderer from "@/components/Home/HomeRenderer";
 import BottomNav from "@/components/Layout/BottomNav";
 import Header from "@/components/Layout/Header";
 import MobileNavShell from "@/components/Layout/MobileNavShell";
-import { AppScrollView, ErrorState, LoadingState, Screen } from "@/components/ui";
-import { getHome } from "@/services";
+import { AppFlatList, ErrorState, LoadingState, Screen } from "@/components/ui";
+import { useHome } from "@/hooks/useHome";
 import type { HomeType } from "@/types/home";
 
-type HomeState =
-  | { status: "loading" }
-  | { status: "error" }
-  | { status: "ready"; data: HomeType[] };
+const EMPTY_HOME_DATA: HomeType[] = [];
 
 export default function HomeScreen() {
-  const [state, setState] = useState<HomeState>({ status: "loading" });
+  const homeQuery = useHome();
+  const { data: homeData, isError, isLoading, refetch } = homeQuery;
+  const data = homeData ?? EMPTY_HOME_DATA;
 
-  const loadHome = useCallback(async () => {
-    try {
-      const data = await getHome("mobile");
-      setState({ status: "ready", data });
-    } catch {
-      setState({ status: "error" });
+  const refreshHome = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
+
+  const retryHome = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const keyExtractor = useCallback(
+    (item: HomeType, index: number) =>
+      `home-block-${item.type}-${item.id ?? index}`,
+    [],
+  );
+
+  const renderItem = useCallback<ListRenderItem<HomeType>>(
+    ({ item, index }) => <HomeRenderer item={item} index={index} />,
+    [],
+  );
+
+  const emptyComponent = useMemo(() => {
+    if (isLoading) {
+      return <LoadingState />;
     }
-  }, []);
 
-  useEffect(() => {
-    let active = true;
+    if (isError) {
+      return (
+        <ErrorState
+          message="לא הצלחנו לטעון את דף הבית. בדקו חיבור ונסו שוב."
+          actionLabel="נסה שוב"
+          onActionPress={retryHome}
+        />
+      );
+    }
 
-    getHome("mobile")
-      .then((data: HomeType[]) => {
-        if (!active) return;
-        setState({ status: "ready", data });
-      })
-      .catch(() => {
-        if (active) setState({ status: "error" });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, []);
+    return null;
+  }, [isError, isLoading, retryHome]);
 
   return (
     <MobileNavShell>
       <Screen>
         <Header />
 
-        <AppScrollView bottomNavPadding onRefresh={loadHome}>
-          {state.status === "loading" ? (
-            <LoadingState />
-          ) : state.status === "error" ? (
-            <ErrorState />
-          ) : (
-            <HomeRenderer data={state.data} />
-          )}
-        </AppScrollView>
+        <AppFlatList<HomeType>
+          data={data}
+          bottomNavPadding
+          onRefresh={refreshHome}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          ListEmptyComponent={emptyComponent}
+          initialNumToRender={4}
+          maxToRenderPerBatch={3}
+          updateCellsBatchingPeriod={80}
+          windowSize={7}
+          removeClippedSubviews
+        />
 
         <BottomNav />
       </Screen>

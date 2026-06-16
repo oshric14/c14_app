@@ -1,3 +1,4 @@
+import { memo, useCallback, useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Pressable, View } from "react-native";
 
@@ -31,12 +32,16 @@ function HomeFeed({ initialData = [], itemsPerPage = 5 }: HomeFeedProps) {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextPage,
   });
+  const feedPages = useMemo(() => data?.pages ?? [], [data?.pages]);
+  const loadMore = useCallback(() => {
+    fetchNextPage();
+  }, [fetchNextPage]);
 
   return (
     <View className="mt-[20px] gap-y-[20px]">
       {initialData.length ? <SecondaryArticle data={initialData} /> : null}
 
-      {data?.pages.map((page, index) =>
+      {feedPages.map((page, index) =>
         page.data.length ? (
           <SecondaryArticle
             key={`home-feed-page-${page.currentPage}-${index}`}
@@ -57,7 +62,7 @@ function HomeFeed({ initialData = [], itemsPerPage = 5 }: HomeFeedProps) {
       {hasNextPage && !isFetching ? (
         <View className="items-center py-[10px]">
           <Pressable
-            onPress={() => fetchNextPage()}
+            onPress={loadMore}
             className="h-[42px] w-[190px] items-center justify-center rounded-full bg-[#E01F26]"
           >
             <AppText
@@ -75,4 +80,4 @@ function HomeFeed({ initialData = [], itemsPerPage = 5 }: HomeFeedProps) {
   );
 }
 
-export default HomeFeed;
+export default memo(HomeFeed);

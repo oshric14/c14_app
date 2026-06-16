@@ -34,7 +34,11 @@ export default function ArticleScreen() {
           {articleQuery.isLoading ? (
             <ArticlePageSkeleton />
           ) : articleQuery.isError || !articleQuery.data ? (
-            <ErrorState message="לא הצלחנו לטעון את הכתבה" />
+            <ErrorState
+              message="לא הצלחנו לטעון את הכתבה. בדקו חיבור ונסו שוב."
+              actionLabel="נסה שוב"
+              onActionPress={() => articleQuery.refetch()}
+            />
           ) : (
             <ArticleProvider article={articleQuery.data}>
               <ArticlePage relatedArticles={relatedQuery.data} />

@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { View } from "react-native";
 
 import type { ArticleType } from "@/types/article";
@@ -18,7 +19,7 @@ function SecondaryArticle({
   categoryName,
 }: SecondaryArticleProps) {
   const bigArticle = data[0];
-  const smallArticles = data.slice(1, 5);
+  const smallArticles = useMemo(() => data.slice(1, 5), [data]);
 
   if (!bigArticle) {
     return null;
@@ -36,4 +37,4 @@ function SecondaryArticle({
   );
 }
 
-export default SecondaryArticle;
+export default memo(SecondaryArticle);

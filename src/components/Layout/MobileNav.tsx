@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import {
   Animated,
   Dimensions,
-  Linking,
   Pressable,
   StyleSheet,
   View,
@@ -11,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppScrollView, AppText } from "@/components/ui";
 import type { navItem } from "@/types/nav";
+import { openNativeUrl } from "@/utils/articleNavigation";
 
 type MobileNavProps = {
   onClose: () => void;
@@ -32,18 +32,9 @@ const absoluteFill = {
   left: 0,
 };
 
-function resolveNavUrl(link?: string) {
-  if (!link) return "";
-  if (link.startsWith("http")) return link;
-  return `https://www.c14.co.il${link.startsWith("/") ? link : `/${link}`}`;
-}
-
 function openNavLink(link: string, onClose: () => void) {
-  const url = resolveNavUrl(link);
   onClose();
-  if (url) {
-    Linking.openURL(url).catch(() => {});
-  }
+  openNativeUrl(link);
 }
 
 function getVisibleItems(items: navItem[]) {
